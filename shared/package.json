@@ -1,0 +1,8 @@
+{
+  "name": "@door-el-may/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { "./validation": "./validation.js", "./phone": "./phone.js", "./water-time": "./waterTime.js", "./reports": "./reports.js" },
+  "dependencies": { "libphonenumber-js": "^1.12.24" }
+}

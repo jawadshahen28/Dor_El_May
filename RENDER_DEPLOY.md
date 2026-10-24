@@ -1,0 +1,125 @@
+# Door El May – Talfit: GitHub and Render staging preparation
+
+Prepared on 25 October 2026. This is a deployment guide, not a record of a live deployment. No GitHub repository or Render service has been created, no code has been pushed, and no existing Atlas records or local secrets have been changed. PWA installation/offline support is a later task.
+
+## Service settings
+
+Use **one Render Web Service with the native Node runtime**. Express serves both `client/dist` and `/api` on one HTTPS origin; no second frontend service, CORS exception, or Vite production server is needed. [Render Express deployment guide](https://render.com/docs/deploy-node-express-app).
+
+| Setting | Exact selection |
+| --- | --- |
+| Service type | Web Service |
+| Language/runtime | Node |
+| Root Directory | Leave blank: repository root containing `package.json`, `package-lock.json`, `client`, `server`, and `shared` |
+| Build Command | `npm ci --include=dev && npm run build` |
+| Start Command | `npm start` |
+| Health Check Path | `/api/health` |
+| Pre-deploy Command | Leave blank |
+| Persistent disk | None required; application data and sessions are stored in MongoDB |
+
+`npm start` uses the existing server workspace command `node src/index.js`. It starts one Express process, without a watcher. Production defaults to `0.0.0.0` and honors Render's supplied `PORT`. [Render port-binding requirements](https://render.com/docs/web-services#port-binding).
+
+Development dependencies must be installed for Vite/Tailwind. Do not substitute `npm ci --omit=dev` before the build. The root package config disables the test MongoDB package's installation-time binary download; explicit database/browser tests can still obtain their binary when needed. Do not use `--ignore-scripts`, because native dependencies such as Argon2 may require installation scripts.
+
+`.node-version` selects Node 24; the package engine range also has an upper bound to avoid accidentally selecting a future major. Render resolves the major to an available patch release. Local verification used Node 24.12.0; the Linux native runtime still needs its first staging verification. [Render Node version selection](https://render.com/docs/node-version).
+
+## Environment settings
+
+These names come from `server/src/config/env.js`; none are new authentication or database configuration names. Set them in Render's Environment settings, without committing an `.env` file.
+
+| Name | Staging setting |
+| --- | --- |
+| `NODE_ENV` | `production` — staging uses full production security |
+| `MONGODB_URI` | Secret connection string for a separate staging database and staging-only database user |
+| `SESSION_SECRET` | Secret random value, at least 32 characters; unique to staging and stable across restarts/deploys |
+| `APP_ORIGINS` | The exact public HTTPS origin shown for this service; no path, trailing slash, wildcard, or local development origins |
+| `TRUST_PROXY_HOPS` | `1` for the intended direct Render HTTPS-proxy topology; verify forwarding behavior before accepting the staging deployment |
+| `HOST` | `0.0.0.0` (also the production default) |
+| `PORT` | Supplied by Render; normally leave it platform-managed |
+| `SESSION_DAYS` | Optional; defaults to `30`, valid range 1–90 |
+
+`NODE_ENV`, `MONGODB_URI`, `SESSION_SECRET`, and `APP_ORIGINS` are required production settings. `TRUST_PROXY_HOPS` is required for the intended proxied setup; its code default is zero. `HOST` and `SESSION_DAYS` can use their defaults. Keep the same `SESSION_SECRET` and database between service restarts to preserve sessions. Deliberately rotating that secret invalidates existing sessions.
+
+`API_PROXY_TARGET` is read only by the Vite development proxy. Do not configure a separate frontend API URL or expose secrets with a `VITE_` prefix. The production frontend uses same-origin relative `/api` requests.
+
+The root and server `.env.example` files list names with empty values; the client template lists only the development proxy name. The server loads `server/.env` locally; the root example is a reference, not an automatically loaded server configuration file. `npm run setup:env` still creates local development defaults and a random secret only when `server/.env` does not exist. Do not run it on Render.
+
+Set `APP_ORIGINS` from the actual service address before enabling public testing. If moving to a custom domain, add that exact HTTPS origin before testing it. A comma-separated list is supported if both service and custom-domain origins should remain usable; cookies are host-scoped and sign-in does not carry between distinct hostnames.
+
+The proxy trust value must match the actual deployment path. Adding a CDN or another proxy requires reviewing that value and the forwarded client-IP/HTTPS headers; do not blindly trust all proxies or weaken CSRF to resolve a configuration error. [Express proxy guidance](https://expressjs.com/en/guide/behind-proxies/).
+
+## Keep the first deployment separate from real citizens
+
+1. Create a dedicated staging Atlas project/cluster where practical, or at minimum a separate staging database. Use separate database credentials restricted to `readWrite` on that staging database, with no access to the real application database. Normal startup initializes existing-model collections/indexes, including unique and TTL indexes.
+2. Put only that staging connection string in this service. Keep the existing local/real `MONGODB_URI` and `SESSION_SECRET` unchanged. Do not copy citizens, reports, sessions, announcements, or water rounds from the real database. Do not restore a production dump into staging.
+3. Add the service's outbound IP ranges to the staging Atlas project's Network Access list. Retrieve them from the service's **Connect → Outbound** panel; do not hardcode an IP from this guide. Allow all relevant ranges for that service/region. Avoid a permanent `0.0.0.0/0` rule. Atlas network rules apply at the project level, another reason to keep staging separate. [Render outbound addresses](https://render.com/docs/outbound-ip-addresses), [Atlas access-list documentation](https://www.mongodb.com/docs/atlas/security/ip-access-list/).
+4. Preserve TLS certificate validation. Use the official Atlas connection string with the exact staging database name and correctly encoded username/password components. The service needs working SRV/DNS resolution and outbound connectivity to Atlas.
+5. Start with an empty staging application database. It is expected to display real zero counters and empty lists. To test citizen registration, explicitly add a staging-only zone through your authorized Atlas workflow using the existing Zone schema (`name`, `isActive`); no deployment seed creates one. Use controlled test accounts and test data only.
+6. Create a staging administrator only through the existing interactive `npm run admin:create` command, from a trusted local terminal configured securely for the staging database. Prefer a separate local checkout and an ignored `server/.env` for staging so the current real configuration stays untouched. Do not put the database URI or an admin password in shell arguments/history. Authorize that workstation's IP temporarily in staging Atlas if necessary. The command hides password input, reports the configuration source, and requires typing `CREATE` before writing. See [ADMIN_SYSTEM.md](ADMIN_SYSTEM.md).
+
+Do not run `npm run seed`, `npm run admin:create`, test servers, test fixtures, or database-copy scripts as build, pre-deploy, startup, or scheduled deployment commands. The provided build/start commands contain none of them.
+
+A staging URL is public and may be discovered. A separate database prevents this test service from having access to real citizen records; the URL's obscurity does not provide that separation. Do not invite real citizens to submit personal data during staging.
+
+## Git and secret audit
+
+The audit found an ignored local `server/.env`. Its values were not printed or changed. The project-scoped Git inventory contains **zero tracked files and zero commits affecting this project**, so no tracked project credential exposure was found. Source credential-pattern matches were the README's placeholders and clearly isolated synthetic test fixtures; no real credentials were found in publishable source. This is a scoped scan, not proof about unrelated files or repositories.
+
+Important local layout finding: Git currently resolves this folder to a parent checkout rooted at `C:/Users/Lenovo`; this project does not yet have its own `.git` directory. No parent repository settings or index entries were changed. When you later authorize GitHub publication, first use a project-only working directory/repository and verify `git rev-parse --show-toplevel` points to this project, not the user-home parent. Do not publish the parent checkout.
+
+`.gitignore` excludes environment values, dependency/build directories, local caches and artifacts, cloud/SSH/editor credentials, private key containers, credential JSON files, logs, browser traces, and database dump/backup files. Only the empty `.env.example` templates are allowed. `package-lock.json` remains publishable and is required by `npm ci`.
+
+Before any future commit/push, inspect the staged file list and rerun a secret scan without pasting values into logs or chat. Ignore rules do not protect a file already tracked or forcibly added. If a real credential has ever been published, rotate it with the provider and clean the affected history; deleting it only from the latest file is insufficient. No push or remote-history inspection was performed in this preparation task.
+
+## Local verification
+
+```powershell
+npm run build
+npm test
+npm run test:db
+npm run test:production
+npm run test:ui
+```
+
+Database suites use disposable local MongoDB processes, overriding the application URI. `test:production` builds the frontend, starts the real production server entry point, and verifies route refreshes, asset/API boundaries, proxy-aware secure sessions, session survival after a process restart, database health failure, and reconnection after a database outage. It simulates HTTPS termination with forwarded headers; it does not provision a real certificate or Render service. Browser tests exercise the citizen/admin interfaces against the built frontend without changing their designs.
+
+The test MongoDB process is started only by explicit test commands; the deployed server always uses the configured Atlas database. Test results are recorded in [VERIFICATION.md](VERIFICATION.md).
+
+## Verify the eventual staging URL
+
+1. Check `/api/health`: it should return HTTP 200 with JSON indicating a connected database. It creates no session and is excluded from rate limits. A failed database/session initialization or bounded database ping returns HTTP 503 in production, allowing Render to reject unhealthy instances. The production entry point refuses to start if the frontend build is absent. [Render HTTP health checks](https://render.com/docs/health-checks).
+2. Open and refresh `/login`, `/guest`, `/home`, `/schedule`, `/announcements`, `/reports`, `/account`, `/admin`, and `/admin/login`. React page requests load the application shell; frontend guards then redirect unauthenticated users. Actual private data always requires an authorized API session. Confirm the real images, Arabic font, and RTL layouts appear normally.
+3. Register a controlled citizen test account in a staging zone, log in, refresh, close/reopen the browser, and verify Home, schedule, announcements/details, report submission/history, and account profile. Empty official-data collections should show honest empty states. Confirm the phone and other account details belong only to the test account.
+4. In browser developer tools, check the cookie `__Host-door.sid`: `Secure`, `HttpOnly`, `SameSite=Lax`, `Path=/`, and no `Domain`. Confirm no password, hash, or session token appears in localStorage. Verify cookies persist over a Render restart/redeploy with an unchanged secret and database.
+5. A guest must receive 401 from `/api/admin/dashboard`; a citizen must receive 403. Log in through `/admin/login` using the explicitly created staging administrator, verify `/admin`, refresh, and check real statistics. The existing disabled future-management placeholders remain disabled. Confirm administrator logout invalidates access and that citizen authentication still works.
+6. Check unknown `/api/...` returns JSON, never React HTML. Check missing `/assets/...` and requests for `/.env` or `/server/.env` return 404. Verify normal API errors remain safe JSON and contain no hashes, database URI, or internal stack trace.
+7. Verify registration/login/logout/reports still enforce CSRF and the exact allowed origin. Test only controlled requests; do not disable origin, CSRF, secure-cookie, or rate-limit protections to make a check pass.
+
+## Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| `npm ci` lock/workspace errors | Build from the repository root with all three workspaces and the committed lockfile. Do not upload `node_modules`. |
+| Vite/Tailwind command missing | Use `npm ci --include=dev`; production mode otherwise commonly omits dev build tools. |
+| Test MongoDB download during installation | Keep the root `config.mongodbMemoryServer.disablePostinstall` setting. Deployment never needs that test binary. |
+| Argon2 native-module error | Install dependencies on Render's Linux runtime using Node 24; do not copy Windows binaries or disable all install scripts. |
+| Port detection/startup failure | Use `npm start`, `NODE_ENV=production`, host `0.0.0.0`, and platform `PORT`. Do not run Vite or the development watcher as the Web Service. |
+| Missing production frontend | The build command must complete and produce `client/dist/index.html` before startup. Root Directory must be the workspace root. |
+| Atlas timeout / unhealthy instance | Check staging outbound IP allowlist, DNS, TLS, exact URI/database, staging user's permissions, and cluster availability. Logs contain safe diagnostic categories only. Initial connection failure exits; Render can restart/retry. After an established connection drops, the MongoDB driver attempts recovery; readiness fails while unavailable. |
+| Login succeeds but refresh loses identity | Check proxy trust, HTTPS forwarding, cookie attributes, unchanged `SESSION_SECRET`, MongoDB `sessions`, TTL permissions, and use of the same hostname. |
+| Origin/CSRF rejection | Match `APP_ORIGINS` to the browser origin exactly; restart after configuration changes. Keep requests same-origin and retain the CSRF header/token flow. |
+| Some users receive 429 together | Verify trusted client-IP forwarding for the real proxy path before changing any limits. Do not set unlimited proxy trust. |
+| Registration cannot select a zone | The staging database is empty. Explicitly add an appropriate staging-only zone; do not copy citizen accounts or silently run the development seed. |
+| Health check fails after a database outage | Restore Atlas connectivity; inspect safe service logs and wait for driver recovery/restart. Do not replace the readiness endpoint with a permanent HTTP 200. |
+
+Remaining live checks: GitHub repository isolation and staged-file review, actual Render Linux installation, the final public HTTPS origin and proxy behavior, staging Atlas permissions/network reachability, and public-browser verification. No public deployment or PWA behavior has been tested yet.
+
+## Preparation changes and results
+
+Created: `.env.example`, `.node-version`, `RENDER_DEPLOY.md`, `server/test/deployment.test.js`, `server/test/production/deployment.test.js`.
+
+Modified: `.gitignore`, `package.json`, `package-lock.json`, `server/.env.example`, `client/.env.example`, `scripts/setup-env.mjs`, `server/src/config/env.js`, `server/src/config/database.js`, `server/src/app.js`, `server/src/index.js`, `README.md`, `VERIFICATION.md`.
+
+No citizen/admin page, stylesheet, model, password hash, database credential, or existing session was changed. Existing build/start scripts remain the deployment entry points. Added tests check configuration, empty templates, safe local setup, production static serving, authorization, secure cookies, restarts, and database recovery.
+
+Verification: clean `npm ci --include=dev` and frontend build passed in an isolated Windows copy. Unit tests: **27 passed**; existing integration tests: **56 passed**; Chrome tests: **26 passed**; production smoke suite: **4 passed**. Total: **113 passed**, with no skipped tests. Nineteen representative secret/artifact paths were confirmed ignored, while the three blank example files and lockfile remain eligible for version control. The Windows MongoDB outage fixture flushes its own disposable database before the test helper forcibly stops it; no real Atlas database was used.

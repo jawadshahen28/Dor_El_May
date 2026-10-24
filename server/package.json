@@ -1,0 +1,24 @@
+{
+  "name": "@door-el-may/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "seed": "node src/seed.js",
+    "admin:create": "node src/create-admin.js",
+    "db:check": "node src/check-database.js"
+  },
+  "dependencies": {
+    "@door-el-may/shared": "1.0.0",
+    "argon2": "^0.44.0",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0",
+    "mongoose": "^8.19.2"
+  }
+}

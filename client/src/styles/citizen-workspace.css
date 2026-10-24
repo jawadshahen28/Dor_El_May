@@ -1,0 +1,189 @@
+.workspace-page { position: relative; min-height: 100svh; background: #f7fafd; color: #173b60; }
+.workspace-page .citizen-header { background: #fff; border-bottom: 1px solid #e5eef6; border-radius: 0 0 18px 18px; }
+.workspace-page .citizen-header-inner { width: min(1120px, 100%); min-height: 98px; margin: auto; padding: 20px 26px; }
+.workspace-page .citizen-council-logo { width: 52px; height: 52px; }
+.workspace-page .citizen-header .brand--compact .brand-name { font-size: 27px; }
+.workspace-page .citizen-header .brand--compact .brand-subtitle { font-size: 11px; }
+.workspace-page .citizen-header .brand--compact .water-mark { width: 31px; height: 40px; }
+.workspace-page .citizen-icon-button { background: transparent; }
+.workspace-page .citizen-nav { top: 30px; border-color: #e5eef6; background: #f7fafd; }
+.workspace-page .citizen-nav button.is-active svg { fill: none; stroke-width: 2.3; }
+.workspace-main { width: min(800px, calc(100% - 48px)); margin: 0 auto; padding: 30px 0 26px; }
+.workspace-intro { margin-bottom: 23px; }
+.workspace-intro h1 { display: flex; align-items: center; gap: 8px; color: #114c87; font-size: 29px; font-weight: 800; line-height: 1.6; }
+.workspace-intro h1 svg { color: #086bd0; flex-shrink: 0; }
+.workspace-intro p { max-width: 580px; margin-top: 3px; font-size: 16px; line-height: 1.8; color: #6985a0; }
+.workspace-page .button--primary, .report-compose .button--primary { background: #066cd3; box-shadow: none; }
+.workspace-page .button { font-size: 17px; }
+.workspace-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.workspace-section-heading h2 { display: flex; align-items: center; gap: 7px; font-size: 20px; line-height: 1.6; font-weight: 700; color: #1a5085; }
+.workspace-section-heading h2 svg { color: #1476cb; flex-shrink: 0; }
+.workspace-refresh { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #eaf4fe; color: #4889bc; }
+.workspace-refresh:hover:enabled { background: #deefff; color: #0068cc; }
+.workspace-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; min-height: 220px; padding: 28px 22px; border: 1px solid #e4edf5; border-radius: 17px; background: #fff; text-align: center; }
+.workspace-state > svg { color: #86abc9; margin-bottom: 8px; }
+.workspace-state h2, .workspace-state h3 { font-size: 19px; color: #416787; font-weight: 700; line-height: 1.7; }
+.workspace-state p { max-width: 350px; font-size: 14px; color: #8097ac; line-height: 1.9; }
+.workspace-state > button { min-height: 44px; margin-top: 10px; padding: 9px 17px; border-radius: 11px; background: #ecf6ff; color: #0b6ec5; font-size: 14px; }
+.workspace-empty-icon { display: grid; place-items: center; width: 67px; height: 67px; margin-bottom: 10px; color: #82b4d9; background: #eff8ff; border-radius: 21px; }
+.workspace-skeleton { display: flex; flex-direction: column; gap: 12px; }
+.workspace-skeleton > div { display: flex; flex-direction: column; gap: 18px; padding: 24px; border: 1px solid #e6eef5; border-radius: 16px; background: #fff; min-height: 143px; }
+.workspace-skeleton span { width: 90%; }
+.workspace-skeleton span:first-child { height: 21px; width: 63%; }
+.workspace-skeleton span:last-child { width: 51%; }
+.workspace-more { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 46px; margin-top: 14px; border: 1px solid #d9e9f6; border-radius: 12px; background: #f1f8ff; color: #096dc4; font-size: 14px; }
+.workspace-date-note { color: #91a4b6; font-size: 11px; line-height: 1.7; text-align: center; margin-top: 13px; }
+.workspace-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; width: min(800px, calc(100% - 48px)); margin: 0 auto; padding: 18px 0 28px; border-top: 1px solid #e4edf5; }
+.workspace-footer .council-signature img { width: 34px; height: 34px; border: 0; }
+.workspace-footer .council-signature span { font-size: 9px; color: #95a7b7; }
+.workspace-footer .council-signature strong { font-size: 13px; color: #6e8ca5; }
+.workspace-footer > span { font-size: 11px; color: #92a6b8; }
+.report-information { display: flex; align-items: flex-start; gap: 13px; padding: 19px; border: 1px solid #d8eafb; border-radius: 16px; background: #eaf5ff; }
+.report-information > svg { flex-shrink: 0; margin-top: 3px; color: #2686cc; }
+.report-information p { font-size: 16px; line-height: 1.9; color: #346289; }
+.report-information span { display: block; margin-top: 8px; font-size: 12px; line-height: 1.8; color: #698eac; }
+.report-new-button { margin-top: 18px; }
+.my-reports { margin-top: 30px; }
+.report-success { display: flex; align-items: flex-start; gap: 10px; margin-top: 16px; padding: 16px; border: 1px solid #cae7d9; border-radius: 15px; background: #f0faf5; color: #337657; outline: none; }
+.report-success > svg { flex-shrink: 0; margin-top: 3px; color: #2a9862; }
+.report-success > div { flex: 1; }
+.report-success h2 { font-size: 18px; font-weight: 700; line-height: 1.6; }
+.report-success p { margin-top: 4px; font-size: 13px; line-height: 1.8; color: #5b8a71; }
+.report-success > button { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; color: #5a8a71; background: transparent; border-radius: 8px; }
+.report-history { display: flex; flex-direction: column; gap: 13px; list-style: none; padding: 0; margin: 0; }
+.report-history-card { padding: 16px 17px 4px; border: 1px solid #e1ebf4; border-radius: 16px; background: #fff; box-shadow: 0 3px 14px #174a6b03; }
+.report-history-heading { display: flex; align-items: center; gap: 10px; }
+.report-history-heading h3 { min-width: 0; flex: 1; font-size: 17px; font-weight: 700; line-height: 1.7; color: #204c77; overflow-wrap: anywhere; }
+.report-type-icon { position: relative; display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; background: #edf6ff; color: #328ccf; }
+.report-type-sign { position: absolute; bottom: 0; left: -2px; background: #fff; border-radius: 50%; color: #2d9b6b; }
+.report-type-icon--not_arrived .report-type-sign { color: #bc8b45; }
+.report-type-icon--water_problem { color: #6493b6; background: #f0f6fb; }
+.report-status { flex-shrink: 0; display: inline-flex; padding: 5px 9px; border-radius: 9px; color: #4585b7; background: #edf5ff; font-size: 11px; line-height: 1.5; }
+.report-status--reviewing { color: #9d7a3c; background: #fcf5e9; }
+.report-status--resolved { color: #398261; background: #eaf7f0; }
+.report-status--closed { color: #7f8d9b; background: #f0f3f6; }
+.report-history-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin-top: 12px; color: #8198ac; font-size: 12px; line-height: 1.7; }
+.report-history-meta > span { display: inline-flex; align-items: center; gap: 4px; }
+.report-history-preview { margin-top: 12px; color: #667f97; font-size: 14px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.report-details { border-top: 1px solid #edf2f7; margin-top: 12px; }
+.report-details summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; cursor: pointer; list-style: none; color: #2c7aba; font-size: 13px; }
+.report-details summary::-webkit-details-marker { display: none; }
+.report-details[open] summary > svg { transform: rotate(180deg); }
+.report-details > p { margin: 3px 0 14px; color: #5c7891; font-size: 14px; line-height: 1.95; white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-details summary:focus-visible, .report-compose input:focus-visible, .report-compose textarea:focus-visible { outline: 3px solid #53b5ff; outline-offset: 3px; }
+.report-compose { width: min(500px, calc(100% - 24px)); max-height: calc(100svh - 28px); overflow: auto; margin: auto; padding: 26px 23px 23px; border: 1px solid #dfebf5; border-radius: 21px; background: #fff; color: #204668; box-shadow: 0 25px 90px #12395326; }
+.report-compose::backdrop { background: #0c28496b; backdrop-filter: blur(3px); }
+.report-compose-close { position: absolute; top: 16px; left: 16px; display: grid; place-items: center; width: 40px; height: 40px; background: #f0f6fb; border-radius: 11px; color: #7991a7; }
+.report-compose h2 { padding-inline-end: 43px; font-size: 25px; line-height: 1.6; font-weight: 800; color: #174b7f; }
+.report-compose-intro { margin-top: 6px; color: #8298ad; font-size: 14px; line-height: 1.8; }
+.report-zone { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 11px 13px; margin: 17px 0 20px; border: 1px solid #dfedf9; border-radius: 12px; background: #f1f8ff; color: #5a80a2; font-size: 14px; }
+.report-zone strong { color: #315d84; font-weight: 500; }
+.report-type-options legend { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+.report-type-options legend > span { color: #5992bc; }
+.report-type-option { display: flex; align-items: center; gap: 11px; padding: 10px 12px; min-height: 61px; border: 1px solid #dde8f2; border-radius: 13px; margin-bottom: 9px; cursor: pointer; }
+.report-type-option input { width: 17px; height: 17px; flex-shrink: 0; margin: 0; accent-color: #0874d7; order: 3; margin-inline-start: auto; }
+.report-type-option > span:last-child { font-size: 15px; font-weight: 500; color: #496b89; }
+.report-type-option .report-type-icon { width: 35px; height: 35px; }
+.report-type-option.is-selected { border-color: #3194e8; background: #eef7ff; }
+.report-type-option.is-selected > span:last-child { color: #0967bc; font-weight: 700; }
+.report-description { margin: 19px 0; }
+.report-description > label { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; color: #315978; font-size: 15px; font-weight: 700; }
+.report-description > label > span { font-size: 11px; font-weight: 400; color: #879dae; }
+.report-description textarea { display: block; width: 100%; resize: vertical; min-height: 110px; max-height: 260px; padding: 12px 13px; border: 1px solid #dce8f3; border-radius: 12px; color: #325777; background: #fcfdff; font-size: 16px; line-height: 1.8; }
+.report-description textarea::placeholder { color: #95a8b8; font-size: 13px; }
+.report-description textarea[aria-invalid="true"] { border-color: #d69c9c; }
+.report-description-help { display: flex; justify-content: space-between; gap: 10px; margin-top: 6px; color: #92a5b5; font-size: 10px; line-height: 1.6; }
+.workspace-field-error { color: #b45858; font-size: 13px; line-height: 1.7; margin-top: 5px; }
+.report-compose .button { font-size: 17px; min-height: 52px; }
+.account-profile { padding: 20px 23px 8px; border: 1px solid #dfebf5; border-radius: 18px; background: #fff; }
+.account-profile-heading { display: flex; align-items: center; gap: 14px; padding-bottom: 20px; margin-bottom: 3px; border-bottom: 1px solid #e9f0f6; }
+.account-avatar { display: grid; place-items: center; flex-shrink: 0; width: 62px; height: 62px; border: 1px solid #dcefff; border-radius: 50%; color: #1377ce; background: #eaf6ff; }
+.account-profile-heading h2 { font-size: 23px; font-weight: 700; line-height: 1.6; color: #1a4c79; overflow-wrap: anywhere; }
+.account-profile-heading p { color: #859db2; font-size: 13px; margin-top: 3px; line-height: 1.7; }
+.account-fields { margin: 0; }
+.account-fields > div { display: grid; grid-template-columns: 32px minmax(0, 1fr); column-gap: 8px; padding: 15px 0; border-bottom: 1px solid #edf2f7; }
+.account-fields > div:last-child { border-bottom: 0; }
+.account-fields svg { grid-row: 1 / span 2; align-self: center; color: #7a9ab6; }
+.account-fields dt { color: #8b9fb1; font-size: 12px; line-height: 1.6; margin-bottom: 5px; }
+.account-fields dd { margin: 0; color: #315778; font-size: 16px; font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
+.account-skeleton > div { min-height: 330px; gap: 45px; }
+.account-security { margin-top: 25px; }
+.account-security > h2 { display: flex; align-items: center; gap: 7px; color: #305e86; font-size: 19px; font-weight: 700; margin-bottom: 13px; }
+.account-security > div { display: flex; align-items: flex-start; gap: 12px; padding: 18px; border: 1px solid #e3edf5; border-radius: 15px; background: #fff; }
+.account-security-icon { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 43px; background: #f0f7fd; border-radius: 12px; color: #79a4c6; }
+.account-security h3 { color: #4e7392; font-size: 16px; font-weight: 500; line-height: 1.7; }
+.account-security p { color: #8a9fb2; font-size: 13px; line-height: 1.9; margin-top: 4px; }
+.account-logout { margin-top: 22px; color: #47799f; border-color: #d7e6f3; background: #fff; }
+
+@media (min-width: 768px) and (max-width: 1050px) {
+  .workspace-page .citizen-nav { position: fixed; top: auto; bottom: 14px; background: #fff; }
+  .workspace-footer { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 767px) {
+  .workspace-page { background: #fbfdff; }
+  .workspace-page .citizen-header-inner { min-height: 92px; padding: 18px 19px; gap: 12px; }
+  .workspace-page .citizen-brand-lockup { gap: 7px; }
+  .workspace-page .citizen-council-logo { width: 48px; height: 48px; }
+  .workspace-page .citizen-header .brand--compact .brand-name { font-size: 25px; }
+  .workspace-page .citizen-header .brand--compact .brand-subtitle { font-size: 10px; }
+  .workspace-page .citizen-header .brand--compact .water-mark { width: 29px; height: 38px; }
+  .workspace-page .citizen-nav { top: auto; background: #fffffff7; }
+  .workspace-main { width: calc(100% - 24px); padding: 24px 0 24px; }
+  .workspace-intro { margin-bottom: 19px; padding-inline: 2px; }
+  .workspace-intro h1 { font-size: 27px; }
+  .workspace-intro p { font-size: 14px; line-height: 1.8; }
+  .workspace-section-heading h2 { font-size: 19px; }
+  .workspace-page .button { min-height: 53px; font-size: 17px; }
+  .report-information { padding: 15px 13px; gap: 10px; border-radius: 15px; }
+  .report-information p { font-size: 14px; }
+  .report-information span { font-size: 11px; }
+  .report-information > svg { width: 22px; }
+  .my-reports { margin-top: 24px; }
+  .workspace-state { min-height: 220px; padding-inline: 15px; }
+  .workspace-state h2, .workspace-state h3 { font-size: 17px; }
+  .workspace-state p { font-size: 13px; }
+  .workspace-footer { width: calc(100% - 28px); padding: 18px 0 calc(94px + env(safe-area-inset-bottom)); gap: 9px; }
+  .workspace-footer .council-signature { gap: 7px; }
+  .workspace-footer .council-signature img { width: 29px; height: 29px; }
+  .workspace-footer .council-signature span { font-size: 8px; }
+  .workspace-footer .council-signature strong { font-size: 10px; }
+  .workspace-footer > span { font-size: 9px; }
+  .report-history-card { padding: 14px 12px 3px; }
+  .report-history-heading { gap: 8px; }
+  .report-history-heading h3 { font-size: 15px; }
+  .report-history-meta { font-size: 11px; }
+  .report-history-preview { font-size: 13px; }
+  .report-status { padding-inline: 7px; font-size: 10px; }
+  .report-history-heading .report-type-icon { width: 35px; height: 38px; }
+  .report-success { padding: 13px 11px; gap: 8px; }
+  .report-success h2 { font-size: 16px; }
+  .report-success p { font-size: 12px; }
+  .report-compose { padding: 23px 17px 19px; }
+  .report-compose h2 { font-size: 23px; }
+  .report-compose-intro { font-size: 13px; }
+  .report-type-option { min-height: 58px; gap: 9px; padding: 9px 11px; }
+  .report-type-option > span:last-child { font-size: 14px; }
+  .report-zone { margin: 15px 0 17px; font-size: 13px; }
+  .report-description { margin-top: 16px; }
+  .report-description textarea { min-height: 100px; }
+  .account-profile { padding: 18px 17px 5px; border-radius: 17px; }
+  .account-profile-heading { gap: 12px; padding-bottom: 17px; }
+  .account-avatar { width: 57px; height: 57px; }
+  .account-profile-heading h2 { font-size: 21px; }
+  .account-fields > div { padding-block: 14px; }
+  .account-fields dd { font-size: 15px; }
+  .account-security { margin-top: 24px; }
+  .account-security > div { padding: 16px 14px; }
+  .account-security p { font-size: 12px; }
+}
+@media (max-width: 360px) {
+  .workspace-page .citizen-header-inner { padding-inline: 14px; }
+  .workspace-page .citizen-council-logo { width: 43px; height: 43px; }
+  .workspace-page .citizen-header .brand--compact .brand-name { font-size: 23px; }
+  .workspace-page .citizen-header .brand--compact .brand-subtitle { font-size: 9px; }
+  .workspace-intro h1 { font-size: 25px; }
+  .workspace-intro p { font-size: 13px; }
+  .report-history-heading h3 { font-size: 14px; }
+  .report-history-meta time { font-size: 10px; }
+  .report-type-option > span:last-child { font-size: 13px; }
+}

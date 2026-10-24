@@ -1,0 +1,129 @@
+.schedule-page { position: relative; min-height: 100svh; background: #f7fafd; color: #15375f; }
+.schedule-page .citizen-header { background: #fff; border-bottom: 1px solid #eaf0f6; border-radius: 0 0 18px 18px; }
+.schedule-page .citizen-header-inner { width: min(1120px, 100%); min-height: 98px; margin: auto; padding: 20px 26px; }
+.schedule-page .citizen-council-logo { width: 52px; height: 52px; }
+.schedule-page .citizen-header .brand--compact .brand-name { font-size: 27px; }
+.schedule-page .citizen-header .brand--compact .brand-subtitle { font-size: 11px; }
+.schedule-page .citizen-header .brand--compact .water-mark { width: 31px; height: 40px; }
+.schedule-page .citizen-icon-button { background: transparent; }
+.schedule-page .citizen-nav { top: 30px; border-color: #e7eff7; background: #f7fafd; }
+.schedule-main { width: min(840px, calc(100% - 48px)); margin: 0 auto; padding: 32px 0 38px; }
+.schedule-intro { margin-bottom: 22px; }
+.schedule-intro h1 { display: flex; align-items: center; gap: 9px; color: #114a87; font-size: 29px; font-weight: 800; line-height: 1.5; }
+.schedule-intro h1 svg { flex-shrink: 0; color: #006bd5; }
+.schedule-intro p { color: #5f7c9d; font-size: 16px; line-height: 1.7; margin-top: 2px; }
+.schedule-filters { display: flex; align-items: center; gap: 7px; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #d9e8f7 transparent; padding-bottom: 8px; margin-bottom: 10px; }
+.schedule-filters button { flex-shrink: 0; min-height: 44px; padding: 9px 14px; color: #536678; font-size: 14px; border: 1px solid transparent; border-radius: 14px; background: #edf1f5; white-space: nowrap; line-height: 1.4; }
+.schedule-filters button:hover { background: #e1edf8; }
+.schedule-filters button[aria-pressed="true"] { background: #0068d3; color: #fff; font-weight: 700; border-color: #0068d3; }
+.schedule-filter-loading { width: 90px; height: 42px; flex-shrink: 0; }
+.schedule-month-navigation { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 3px 5px; margin-bottom: 13px; border-radius: 15px; background: #eaf4fe; }
+.schedule-month-navigation > button { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #224e80; }
+.schedule-month-navigation > button:hover:enabled { color: #0067ce; background: #f7fbff; }
+.schedule-month-navigation > button:disabled { opacity: .35; }
+.schedule-month-navigation h2 { display: flex; align-items: center; justify-content: center; gap: 9px; color: #15375f; font-size: 18px; font-weight: 700; }
+.schedule-month-navigation h2 svg { color: #006bd5; }
+.schedule-return-current { display: block; margin: -4px auto 12px; padding: 5px 10px; min-height: 36px; background: transparent; color: #357bad; font-size: 12px; }
+.schedule-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.schedule-row { display: grid; grid-template-columns: minmax(0, 1fr) 130px 125px; align-items: center; gap: 12px; min-height: 78px; padding: 10px 12px; border: 1px solid #e2ebf3; border-radius: 15px; background: #fff; }
+.schedule-row--mine { border-color: #d2e8fc; background: #e6f3ff; }
+.schedule-neighborhood { display: flex; align-items: center; min-width: 0; gap: 10px; }
+.schedule-neighborhood > div { min-width: 0; }
+.schedule-zone-icon { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 48px; border-radius: 12px; color: #7c97b0; background: #f1f6fb; }
+.schedule-row--mine .schedule-zone-icon { color: #0570d6; background: #d6ebff; }
+.schedule-neighborhood h2 { color: #16345c; font-size: 15px; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+.schedule-row--mine h2 { color: #0055b5; }
+.schedule-row-badges { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 8px; margin-top: 5px; }
+.schedule-status { display: inline-flex; align-items: center; gap: 4px; color: #5a7f9f; font-size: 11px; line-height: 1.4; }
+.schedule-status i { display: block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.schedule-status--pumping { color: #178347; }
+.schedule-status--completed { color: #697f91; }
+.schedule-status--cancelled { color: #b45862; }
+.schedule-mine-label { display: inline-flex; align-items: center; gap: 2px; color: #2680c5; font-size: 10px; }
+.schedule-time { display: flex; align-items: center; gap: 6px; padding-inline-start: 12px; min-height: 34px; border-inline-start: 1px solid #e4edf5; color: #304f73; font-size: 14px; line-height: 1.6; }
+.schedule-time svg { color: #5b7c9e; flex-shrink: 0; }
+.schedule-time time { white-space: nowrap; }
+.schedule-date { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 34px; gap: 3px; border-inline-start: 1px solid #e4edf5; color: #314f72; font-size: 13px; line-height: 1.4; }
+.schedule-date > span { font-weight: 500; }
+.schedule-date bdi { font-size: 12px; }
+.schedule-actual-start { grid-column: 1 / -1; padding-top: 7px; border-top: 1px solid #e2edf4; color: #39745c; font-size: 11px; line-height: 1.7; }
+.schedule-load-more { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; min-height: 44px; margin-top: 12px; border: 1px solid #dceaf6; border-radius: 12px; background: #fff; color: #076ac2; font-size: 14px; }
+.schedule-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 290px; padding: 32px 20px; border: 1px solid #e3edf6; border-radius: 17px; background: #fff; text-align: center; }
+.schedule-empty-icon { display: grid; place-items: center; width: 76px; height: 76px; margin-bottom: 21px; border-radius: 23px; background: #edf7ff; color: #82b9df; }
+.schedule-state h2 { color: #3f6486; font-size: 18px; font-weight: 700; line-height: 1.7; }
+.schedule-state p { margin-top: 8px; color: #8a9fb3; font-size: 14px; line-height: 1.9; }
+.schedule-state--error > svg { color: #95aabe; margin-bottom: 17px; }
+.schedule-state > button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; margin-top: 20px; padding: 10px 18px; border-radius: 12px; color: #0a70c8; background: #eaf5ff; font-size: 14px; }
+.schedule-skeleton { display: flex; flex-direction: column; gap: 10px; }
+.schedule-skeleton-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; align-items: center; gap: 25px; min-height: 78px; padding: 15px; border: 1px solid #e8eff5; border-radius: 15px; background: #fff; }
+.schedule-skeleton-row > span:first-child { height: 28px; }
+.schedule-source { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 12px; min-height: 46px; margin-top: 14px; border-radius: 12px; background: #eaf4fd; color: #466b94; }
+.schedule-source > span { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; }
+.schedule-source > span svg { color: #0870d2; }
+.schedule-source > button { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #5d8cb6; background: transparent; }
+.schedule-source > button:hover:enabled { color: #036cd2; background: #fff; }
+.schedule-meta { margin-top: 10px; color: #8b9fb4; font-size: 11px; text-align: center; line-height: 1.8; }
+.schedule-page .citizen-nav button.is-active svg { fill: none; stroke-width: 2.3; }
+
+@media (min-width: 768px) and (max-width: 1050px) {
+  .schedule-page .citizen-nav { position: fixed; top: auto; bottom: 14px; background: #fff; }
+  .schedule-main { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 767px) {
+  .schedule-page { background: #fcfdff; }
+  .schedule-page .citizen-header-inner { min-height: 92px; padding: 18px 19px; gap: 12px; }
+  .schedule-page .citizen-brand-lockup { gap: 7px; }
+  .schedule-page .citizen-council-logo { width: 48px; height: 48px; }
+  .schedule-page .citizen-header .brand--compact .brand-name { font-size: 25px; }
+  .schedule-page .citizen-header .brand--compact .brand-subtitle { font-size: 10px; }
+  .schedule-page .citizen-header .brand--compact .water-mark { width: 29px; height: 38px; }
+  .schedule-page .citizen-header-actions { gap: 0; }
+  .schedule-page .citizen-nav { top: auto; background: #fffffff7; }
+  .schedule-main { width: calc(100% - 24px); padding: 24px 0 calc(93px + env(safe-area-inset-bottom)); }
+  .schedule-intro { margin-bottom: 19px; padding-inline: 2px; }
+  .schedule-intro h1 { font-size: 27px; gap: 8px; }
+  .schedule-intro p { font-size: 15px; margin-top: 1px; }
+  .schedule-filters { gap: 6px; margin-bottom: 9px; }
+  .schedule-filters button { padding-inline: 12px; font-size: 13px; border-radius: 13px; }
+  .schedule-month-navigation { margin-bottom: 11px; border-radius: 14px; }
+  .schedule-month-navigation h2 { font-size: 17px; }
+  .schedule-month-navigation > button { width: 40px; height: 40px; }
+  .schedule-list { gap: 9px; }
+  .schedule-row { grid-template-columns: minmax(0, 1fr) 83px 76px; gap: 7px; min-height: 76px; padding: 9px 8px; border-radius: 14px; }
+  .schedule-neighborhood { gap: 7px; }
+  .schedule-zone-icon { width: 33px; height: 41px; border-radius: 10px; }
+  .schedule-zone-icon svg { width: 19px; height: 19px; }
+  .schedule-neighborhood h2 { font-size: 13px; }
+  .schedule-row-badges { gap: 4px; margin-top: 4px; }
+  .schedule-status { font-size: 10px; }
+  .schedule-mine-label { font-size: 9px; }
+  .schedule-time { padding-inline-start: 6px; gap: 4px; font-size: 12px; }
+  .schedule-time svg { width: 13px; height: 13px; }
+  .schedule-date { font-size: 12px; }
+  .schedule-date bdi { font-size: 11px; }
+  .schedule-actual-start { font-size: 10px; }
+  .schedule-state { min-height: 300px; padding-inline: 14px; }
+  .schedule-state h2 { font-size: 17px; }
+  .schedule-state p { font-size: 13px; }
+  .schedule-source { padding-inline: 10px; }
+  .schedule-source > span { font-size: 12px; gap: 5px; }
+  .schedule-meta { font-size: 10px; }
+}
+
+@media (max-width: 360px) {
+  .schedule-page .citizen-header-inner { padding-inline: 14px; }
+  .schedule-page .citizen-council-logo { width: 43px; height: 43px; }
+  .schedule-page .citizen-header .brand--compact .brand-name { font-size: 23px; }
+  .schedule-page .citizen-header .brand--compact .brand-subtitle { font-size: 9px; }
+  .schedule-intro h1 { font-size: 25px; }
+  .schedule-intro p { font-size: 13px; }
+  .schedule-row { grid-template-columns: minmax(0, 1fr) 74px 69px; gap: 5px; padding-inline: 7px; }
+  .schedule-zone-icon { width: 25px; height: 35px; }
+  .schedule-neighborhood { gap: 5px; }
+  .schedule-neighborhood h2 { font-size: 12px; }
+  .schedule-time { font-size: 11px; gap: 3px; padding-inline-start: 5px; }
+  .schedule-date { font-size: 11px; }
+  .schedule-date bdi { font-size: 10px; }
+  .schedule-state h2 { font-size: 16px; }
+}

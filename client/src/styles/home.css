@@ -1,0 +1,293 @@
+.citizen-page { position: relative; min-height: 100svh; padding-top: 22px; background: #f4f8fc; color: #12345d; }
+.citizen-hero { position: relative; display: flex; flex-direction: column; width: min(1120px, calc(100% - 48px)); min-height: 300px; margin: 0 auto; overflow: hidden; border-radius: 24px 24px 0 0; background: #668b9c; }
+.citizen-village { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; }
+.citizen-hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, #eef7ffed 0%, #eaf4fc9c 25%, #12364d00 49%, #082a38ba 100%); }
+.citizen-header { position: relative; z-index: 1; background: transparent; }
+.citizen-header-inner { padding: 22px 26px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.citizen-brand-lockup { display: flex; align-items: center; gap: 11px; }
+.citizen-council-logo { width: 58px; height: 58px; border-radius: 50%; object-fit: contain; border: 2px solid #ffffffb8; background: #fff; }
+.citizen-header .brand--compact { flex-direction: row-reverse; gap: 7px; text-align: right; }
+.citizen-header .brand--compact .brand-name { font-size: 29px; color: #085bb2; text-shadow: none; }
+.citizen-header .brand--compact .brand-subtitle { font-size: 12px; color: #15385f; font-weight: 700; }
+.citizen-header .brand--compact .water-mark { width: 33px; height: 43px; filter: none; }
+.citizen-header-actions { display: flex; align-items: center; gap: 15px; }
+.citizen-icon-button { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; color: #153c70; background: #ffffff48; }
+.citizen-icon-button:hover { background: #ffffffa8; }
+.citizen-bell svg { width: 25px; height: 25px; stroke-width: 1.7; }
+.citizen-logout { display: flex; align-items: center; gap: 6px; padding: 10px 0; color: #345675; font-size: 12px; background: transparent; }
+.citizen-logout:hover { color: #005ec4; }
+.citizen-welcome { position: relative; display: flex; align-items: center; gap: 11px; padding: 15px 28px 32px; margin-top: auto; color: #fff; }
+.citizen-avatar { display: grid; place-items: center; flex-shrink: 0; width: 46px; height: 46px; border: 4px solid #ffffffb3; border-radius: 50%; background: #f6fbff; color: #0865c4; }
+.citizen-avatar svg { fill: #0865c4; stroke: #0865c4; }
+.citizen-welcome-content { min-width: 0; }
+.citizen-welcome h1 { font-size: 25px; font-weight: 800; line-height: 1.5; color: #fff; overflow-wrap: anywhere; text-shadow: 0 1px 5px #102b4938; }
+.citizen-zone { display: flex; align-items: center; gap: 5px; margin-top: 5px; color: #f1f6fa; font-size: 14px; line-height: 1.6; }
+.citizen-zone strong { font-weight: 500; }
+.citizen-zone svg { flex-shrink: 0; }
+.citizen-main { position: relative; z-index: 1; width: min(1120px, calc(100% - 48px)); margin: -13px auto 0; padding: 18px 18px 25px; border-radius: 20px 20px 0 0; background: #fff; }
+.citizen-water-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 14px; }
+.citizen-card { min-width: 0; border: 1px solid #e0eaf4; border-radius: 16px; background: #fff; }
+.citizen-current { position: relative; display: flex; flex-direction: column; overflow: hidden; min-height: 190px; border-color: #d4e8fa; background: #e7f4ff; }
+.citizen-current-photo { position: absolute; bottom: 0; left: 0; width: 50%; height: 100%; opacity: .23; object-fit: cover; object-position: 50% 55%; mask-image: linear-gradient(90deg, #000 7%, transparent 100%); pointer-events: none; }
+.citizen-current > :not(.citizen-current-photo) { position: relative; }
+.citizen-card-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.citizen-current > .citizen-card-heading { padding: 15px 15px 0; }
+.citizen-title-with-icon { display: flex; align-items: center; gap: 7px; color: #0063c7; min-width: 0; }
+.citizen-title-with-icon > svg { flex-shrink: 0; }
+.citizen-title-with-icon h2 { color: #0752ad; font-size: 18px; font-weight: 800; line-height: 1.5; }
+.citizen-status { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 5px 8px; font-size: 10px; font-weight: 500; line-height: 1.4; border-radius: 8px; white-space: nowrap; }
+.citizen-status--pumping { padding: 8px 12px; color: #147e35; background: #c9eddd; border-radius: 14px; font-size: 13px; font-weight: 700; }
+.citizen-status--quiet { color: #6887a6; background: #f6fbff; border: 1px solid #d6e8f6; }
+.citizen-status--scheduled { color: #4286bc; background: #e8f3ff; }
+.citizen-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.citizen-active-rounds { list-style: none; margin: 0; padding: 10px 18px 7px 82px; flex: 1; }
+.citizen-active-rounds li { padding: 5px 0; }
+.citizen-active-rounds li + li { padding-top: 8px; margin-top: 5px; border-top: 1px solid #cbdff282; }
+.citizen-active-rounds h3 { display: flex; align-items: center; gap: 5px; font-size: 21px; font-weight: 800; line-height: 1.5; color: #0c305c; overflow-wrap: anywhere; }
+.citizen-active-rounds h3 svg { color: #0665c8; flex-shrink: 0; }
+.citizen-active-rounds p { color: #5c7590; font-size: 12px; line-height: 1.7; margin-top: 5px; }
+.citizen-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.citizen-empty h3 { font-size: 16px; font-weight: 700; line-height: 1.7; color: #23496e; }
+.citizen-empty p { margin-top: 4px; color: #7a91a8; font-size: 12px; line-height: 1.7; }
+.citizen-empty--water { position: relative; align-items: flex-start; padding: 19px 18px 17px 72px; min-height: 100px; text-align: right; flex: 1; }
+.citizen-empty--water h3 { font-size: 19px; }
+.citizen-empty--water p { color: #657e97; }
+.citizen-water-orbit { position: absolute; left: 18px; bottom: 23px; color: #67a9db; opacity: .8; }
+.citizen-card-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 5px 11px; margin-top: auto; border-top: 1px solid #cae1f399; }
+.citizen-official { display: inline-flex; align-items: center; gap: 4px; color: #5f83a3; font-size: 10px; }
+.citizen-water-update { display: inline-flex; align-items: center; gap: 5px; color: #5c7995; font-size: 10px; }
+.citizen-water-update time { white-space: nowrap; }
+.citizen-refresh { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 0; border-radius: 8px; color: #3d7eb3; background: #ffffff8c; }
+.citizen-refresh:hover:enabled { background: #fff; color: #0065c7; }
+.citizen-my-round { position: relative; overflow: hidden; padding: 15px 16px 13px; min-height: 190px; border-color: #e0edf8; background: linear-gradient(110deg, #e7f4ff, #fff 88%); }
+.citizen-calendar-illustration { position: absolute; left: 20px; bottom: 32px; color: #99cff6; fill: #dcefff; pointer-events: none; }
+.citizen-my-zone { display: flex; align-items: center; gap: 5px; margin-top: 13px; font-size: 17px; font-weight: 700; color: #14365e; padding-inline-end: 74px; }
+.citizen-my-zone svg { color: #567795; flex-shrink: 0; }
+.citizen-next-content { padding: 9px 0 0 86px; text-align: right; }
+.citizen-next-content h3 { display: flex; align-items: center; gap: 5px; color: #2d4d73; font-size: 14px; font-weight: 500; line-height: 1.7; }
+.citizen-next-content h3 > svg { flex-shrink: 0; }
+.citizen-next-content time { display: inline-flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.citizen-next-content p { display: flex; align-items: center; gap: 5px; color: #2c507b; font-size: 14px; line-height: 1.7; margin-top: 3px; }
+.citizen-next-content p svg { flex-shrink: 0; }
+.citizen-next-meta { display: flex; align-items: center; gap: 9px; margin-top: 6px; }
+.citizen-next-meta .citizen-status { padding: 2px 7px; font-size: 9px; }
+.citizen-timezone { color: #8ba0b5; font-size: 9px; }
+.citizen-empty--next { align-items: flex-start; min-height: 70px; padding: 12px 0 2px 83px; text-align: right; }
+.citizen-empty--next h3 { color: #56718c; font-size: 15px; font-weight: 500; }
+.citizen-info-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: start; gap: 18px; margin-top: 20px; }
+.citizen-upcoming { border: 0; background: transparent; }
+.citizen-upcoming .citizen-card-heading { padding: 0 1px; margin-bottom: 10px; }
+.citizen-upcoming h2 { font-size: 20px; }
+.citizen-view-all { padding: 7px 14px; color: #0864c9; background: #e7f3ff; border-radius: 13px; font-size: 13px; line-height: 1.4; }
+.citizen-view-all:hover { background: #d6ebff; }
+.citizen-round-list { display: flex; flex-direction: column; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.citizen-round-list li { border: 1px solid #e5edf5; border-radius: 12px; background: #fff; overflow: hidden; }
+.citizen-round-list li.citizen-round-is-mine { background: #f0f8ff; border-color: #d7eafb; }
+.citizen-round-row { display: grid; grid-template-columns: 17px minmax(76px, 1fr) minmax(140px, 1.6fr) 15px; align-items: center; gap: 5px; min-height: 49px; width: 100%; padding: 6px 9px; background: transparent; text-align: right; }
+.citizen-round-row:hover { background: #edf6fd; }
+.citizen-round-icon { color: #6e849c; display: flex; align-items: center; }
+.citizen-round-description { min-width: 0; }
+.citizen-round-description h3 { font-size: 13px; font-weight: 700; line-height: 1.5; color: #153760; overflow-wrap: anywhere; }
+.citizen-round-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; color: #879db2; font-size: 8px; margin-top: 2px; }
+.citizen-round-meta > span { display: inline-flex; align-items: center; gap: 2px; color: #3584bd; font-size: 8px; }
+.citizen-round-date { min-width: 0; font-size: 11px; line-height: 1.4; color: #2c4f74; }
+.citizen-round-date time { display: flex; gap: 5px; align-items: center; }
+.citizen-round-date time > svg { flex-shrink: 0; color: #536e8e; }
+.citizen-round-date > span { display: block; padding-inline-start: 18px; margin-top: 2px; font-size: 10px; color: #8a9db0; }
+.citizen-round-chevron { color: #47678c; }
+.citizen-empty--compact { display: grid; grid-template-columns: 42px 1fr; align-content: center; column-gap: 11px; min-height: 108px; padding: 16px; text-align: right; }
+.citizen-empty--compact h3 { font-size: 14px; align-self: end; }
+.citizen-empty--compact p { font-size: 12px; align-self: start; }
+.citizen-empty-icon { grid-row: 1 / span 2; display: grid; place-items: center; align-self: center; width: 42px; height: 46px; color: #8bbbe1; background: #f0f7fd; border-radius: 12px; }
+.citizen-empty-icon--warm { color: #80afd4; background: #eff7fe; }
+.citizen-upcoming > .citizen-empty { border: 1px solid #e4edf6; border-radius: 13px; }
+.citizen-announcement { display: flex; flex-direction: column; overflow: hidden; }
+.citizen-announcement > .citizen-card-heading { padding: 14px 15px 0; }
+.citizen-announcement .citizen-title-with-icon h2 { font-size: 17px; }
+.citizen-announcement-content { padding: 12px 16px 5px; }
+.citizen-announcement-content h3 { margin-top: 9px; color: #254569; font-size: 18px; font-weight: 700; line-height: 1.6; overflow-wrap: anywhere; }
+.citizen-announcement-content > p { margin-top: 6px; font-size: 13px; line-height: 1.8; color: #718aa3; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.citizen-announcement-date { display: flex; align-items: center; gap: 5px; margin-top: 12px; font-size: 10px; color: #90a4b7; }
+.citizen-read-more { display: inline-flex; align-items: center; gap: 5px; margin-top: 12px; padding: 0; color: #076ac4; font-size: 12px; background: transparent; }
+.citizen-card-link { display: flex; align-items: center; justify-content: flex-start; gap: 6px; width: 100%; padding: 11px 16px; margin-top: auto; background: transparent; color: #1975c0; border-top: 1px solid #edf3f8; font-size: 12px; font-weight: 500; }
+.citizen-card-link:hover { background: #f6faff; }
+.citizen-checked-at { display: block; margin: 12px 2px 0; color: #92a5b8; font-size: 10px; }
+.citizen-quick-section { margin-top: 24px; }
+.citizen-section-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+.citizen-section-heading h2 { font-size: 18px; font-weight: 700; color: #1d4c7b; }
+.citizen-section-heading > span { font-size: 10px; color: #95a8ba; }
+.citizen-quick-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.citizen-quick-action { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 17px 8px 13px; border: 1px solid #e1ebf5; border-radius: 14px; background: #fbfdff; }
+.citizen-quick-action:hover { border-color: #b9d8f2; background: #f3f9ff; }
+.citizen-quick-icon { display: grid; place-items: center; width: 38px; height: 38px; background: #eaf4ff; color: #418fce; border-radius: 11px; }
+.citizen-quick-action strong { font-size: 13px; font-weight: 700; }
+.citizen-quick-description { font-size: 11px; color: #8fa4b8; }
+.citizen-soon-label { color: #9caec0; font-size: 9px; }
+.citizen-footer { display: flex; justify-content: space-between; align-items: center; gap: 14px; width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 18px 20px 24px; background: #fff; border-top: 1px solid #e7eef5; border-radius: 0 0 20px 20px; }
+.citizen-footer .council-signature img { width: 34px; height: 34px; border: 0; }
+.citizen-footer .council-signature span { color: #9aabba; font-size: 9px; }
+.citizen-footer .council-signature strong { color: #728ca4; font-size: 12px; }
+.citizen-footer > div:last-child { text-align: left; color: #95a7b8; font-size: 10px; }
+.citizen-footer > div:last-child > span { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
+.citizen-nav { position: absolute; top: 46px; left: 50%; transform: translateX(-50%); z-index: 4; display: flex; align-items: center; justify-content: center; width: max-content; gap: 2px; padding: 4px; border: 1px solid #ffffff75; border-radius: 13px; background: #ffffff87; }
+.citizen-nav button { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 37px; padding: 8px 12px; color: #62778f; background: transparent; border-radius: 9px; font-size: 12px; white-space: nowrap; }
+.citizen-nav button svg { width: 18px; height: 18px; }
+.citizen-nav button.is-active { color: #0069d6; background: #f6fbffb8; font-weight: 700; }
+.citizen-nav button:hover { color: #0066c8; background: #edf7ff; }
+.citizen-loading-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 12px; color: #8a9fb3; }
+.citizen-load-error { overflow: hidden; padding: 27px 20px 0; text-align: center; }
+.citizen-load-error > svg { display: block; margin: auto auto 13px; color: #8baec9; }
+.citizen-load-error h2 { font-size: 20px; font-weight: 700; color: #52718a; }
+.citizen-load-error p { margin: 12px 0 20px; color: #7b92a8; font-size: 14px; line-height: 1.8; }
+.citizen-load-error .citizen-card-link { justify-content: center; }
+.citizen-loading .citizen-info-grid { margin-top: 18px; }
+.citizen-skeleton-card { display: flex; flex-direction: column; align-items: center; gap: 12px; min-height: 175px; padding: 19px; }
+.citizen-loading .citizen-info-grid .citizen-skeleton-card { min-height: 130px; }
+.citizen-skeleton { display: block; height: 12px; border-radius: 6px; background: linear-gradient(100deg, #edf3f8 20%, #f7fafd 45%, #edf3f8 70%); background-size: 220% 100%; animation: citizen-shimmer 1.6s linear infinite; }
+.citizen-skeleton--title { width: 65%; height: 17px; align-self: flex-start; }
+.citizen-skeleton--circle { width: 39px; height: 39px; border-radius: 50%; }
+.citizen-skeleton--text { width: 78%; }
+.citizen-skeleton--short { width: 47%; height: 9px; }
+@keyframes citizen-shimmer { to { background-position: -220% 0; } }
+.citizen-dialog { width: min(440px, calc(100% - 36px)); max-height: 85svh; margin: auto; padding: 34px 29px 28px; overflow: auto; border: 1px solid #dbe7f1; border-radius: 24px; background: #fff; color: #264a68; text-align: right; box-shadow: 0 25px 90px #0b325630; }
+.citizen-dialog::backdrop { background: #0c284967; backdrop-filter: blur(3px); }
+.citizen-dialog-close { position: absolute; top: 14px; left: 14px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: #f1f6fa; color: #7c91a5; }
+.citizen-dialog-icon { display: grid; place-items: center; width: 58px; height: 58px; margin-bottom: 20px; border-radius: 18px; background: #ecf6ff; color: #258bd2; }
+.citizen-dialog h2 { padding-inline-end: 5px; font-size: 25px; font-weight: 700; line-height: 1.6; overflow-wrap: anywhere; }
+.citizen-dialog-badge { display: inline-flex; padding: 3px 8px; margin-top: 10px; border: 1px solid #e0eaf3; border-radius: 7px; background: #f2f7fb; color: #6a91b0; font-size: 11px; }
+.citizen-dialog p { margin-top: 18px; color: #8399ad; font-size: 15px; line-height: 1.9; }
+.citizen-dialog p.citizen-full-announcement { color: #466680; white-space: pre-wrap; overflow-wrap: anywhere; }
+.citizen-account-details { margin: 20px 0 24px; }
+.citizen-account-details > div { padding: 13px 0; border-bottom: 1px solid #edf2f7; }
+.citizen-account-details dt { color: #94a7b8; font-size: 12px; margin-bottom: 5px; }
+.citizen-account-details dd { margin: 0; font-size: 16px; font-weight: 500; }
+.citizen-dialog .button { font-size: 16px; min-height: 50px; }
+
+@media (max-width: 1050px) and (min-width: 768px) {
+  .citizen-nav { position: fixed; top: auto; bottom: 14px; z-index: 50; width: max-content; background: #fff; border-color: #e3ecf5; box-shadow: 0 3px 16px #173c6010; }
+  .citizen-footer { padding-bottom: 90px; }
+  .citizen-header-inner { padding-inline: 22px; }
+  .citizen-water-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .citizen-title-with-icon h2 { font-size: 16px; }
+  .citizen-round-row { grid-template-columns: 15px minmax(65px, 1fr) minmax(115px, 1.6fr) 13px; padding-inline: 7px; gap: 4px; }
+  .citizen-round-description h3 { font-size: 12px; }
+  .citizen-round-date { font-size: 10px; }
+}
+
+@media (max-width: 767px) {
+  .citizen-page { padding-top: 0; background: #fff; }
+  .citizen-hero { width: 100%; min-height: clamp(258px, 69vw, 294px); border-radius: 0; }
+  .citizen-village { object-position: 50% 25%; }
+  .citizen-hero-shade { background: linear-gradient(180deg, #eff7ffe8 0%, #e7f0fa7a 27%, #14304600 49%, #071e2ac7 100%); }
+  .citizen-header-inner { padding: 24px 19px 13px; gap: 12px; }
+  .citizen-brand-lockup { gap: 8px; }
+  .citizen-council-logo { width: 52px; height: 52px; }
+  .citizen-header .brand--compact { gap: 5px; }
+  .citizen-header .brand--compact .brand-name { font-size: 29px; }
+  .citizen-header .brand--compact .brand-subtitle { font-size: 11px; margin-top: 3px; }
+  .citizen-header .brand--compact .water-mark { width: 29px; height: 40px; }
+  .citizen-header-actions { gap: 0; }
+  .citizen-icon-button { width: 34px; height: 37px; background: transparent; }
+  .citizen-bell svg { width: 25px; height: 25px; }
+  .citizen-logout { display: none; }
+  .citizen-welcome { align-items: flex-start; gap: 10px; padding: 16px 21px 29px; }
+  .citizen-avatar { width: 43px; height: 43px; border-width: 3px; margin-top: 2px; }
+  .citizen-avatar svg { width: 24px; height: 24px; }
+  .citizen-welcome h1 { font-size: 22px; line-height: 1.5; }
+  .citizen-zone { font-size: 13px; margin-top: 4px; gap: 4px; }
+  .citizen-main { width: 100%; padding: 12px 12px 22px; margin-top: -13px; border-radius: 17px 17px 0 0; }
+  .citizen-water-grid, .citizen-info-grid { grid-template-columns: 1fr; gap: 12px; }
+  .citizen-card { border-radius: 15px; }
+  .citizen-current { min-height: 168px; }
+  .citizen-current > .citizen-card-heading { gap: 7px; padding: 13px 12px 0; }
+  .citizen-title-with-icon { gap: 5px; }
+  .citizen-title-with-icon h2 { font-size: 17px; }
+  .citizen-current .citizen-title-with-icon h2 { font-size: 16px; }
+  .citizen-current .citizen-title-with-icon > svg { width: 16px; height: 18px; }
+  .citizen-status--pumping { padding: 7px 10px; font-size: 12px; }
+  .citizen-status--quiet { font-size: 9px; padding: 5px 7px; }
+  .citizen-empty--water { min-height: 89px; padding: 17px 15px 15px 66px; }
+  .citizen-empty--water h3 { font-size: 18px; }
+  .citizen-empty--water p { font-size: 11px; }
+  .citizen-water-orbit { left: 15px; bottom: 21px; }
+  .citizen-water-orbit svg { width: 39px; height: 39px; }
+  .citizen-card-foot { padding: 3px 9px; gap: 6px; }
+  .citizen-official { font-size: 9px; gap: 3px; }
+  .citizen-official svg { width: 12px; }
+  .citizen-water-update { font-size: 9px; gap: 4px; }
+  .citizen-refresh { width: 27px; height: 27px; }
+  .citizen-active-rounds { padding: 9px 15px 7px 64px; }
+  .citizen-active-rounds h3 { font-size: 19px; }
+  .citizen-active-rounds p { font-size: 11px; margin-top: 4px; }
+  .citizen-my-round { min-height: 159px; padding: 13px 15px 12px; }
+  .citizen-my-round .citizen-title-with-icon > svg { width: 21px; height: 21px; }
+  .citizen-my-zone { margin-top: 12px; font-size: 16px; padding-inline-end: 69px; }
+  .citizen-my-zone svg { width: 15px; }
+  .citizen-calendar-illustration { left: 21px; bottom: 28px; width: 68px; height: 73px; }
+  .citizen-next-content { padding: 9px 0 0 78px; }
+  .citizen-next-content h3, .citizen-next-content p { font-size: 13px; }
+  .citizen-next-meta { margin-top: 6px; }
+  .citizen-empty--next { min-height: 61px; padding: 10px 0 0 79px; }
+  .citizen-empty--next h3 { font-size: 14px; line-height: 1.8; }
+  .citizen-info-grid { margin-top: 17px; gap: 17px; }
+  .citizen-upcoming .citizen-card-heading { margin-bottom: 9px; }
+  .citizen-upcoming h2 { font-size: 19px; }
+  .citizen-view-all { padding: 7px 13px; font-size: 12px; border-radius: 13px; }
+  .citizen-round-list { gap: 5px; }
+  .citizen-round-row { min-height: 46px; padding: 5px 8px; }
+  .citizen-round-description h3 { font-size: 13px; }
+  .citizen-round-date { font-size: 12px; }
+  .citizen-round-date > span { font-size: 10px; }
+  .citizen-empty--compact { min-height: 105px; padding: 15px; }
+  .citizen-empty--compact h3 { font-size: 14px; }
+  .citizen-empty--compact p { font-size: 11px; }
+  .citizen-announcement .citizen-title-with-icon h2 { font-size: 17px; }
+  .citizen-announcement-content { padding: 11px 15px 4px; }
+  .citizen-announcement-content h3 { font-size: 18px; }
+  .citizen-card-link { padding: 10px 15px; font-size: 11px; }
+  .citizen-checked-at { margin-top: 10px; font-size: 9px; }
+  .citizen-quick-section { margin-top: 21px; }
+  .citizen-section-heading h2 { font-size: 17px; }
+  .citizen-section-heading > span { font-size: 9px; }
+  .citizen-quick-grid { gap: 8px; }
+  .citizen-quick-action { gap: 8px; padding: 14px 5px 11px; }
+  .citizen-quick-action strong { font-size: 12px; }
+  .citizen-quick-description { display: none; }
+  .citizen-soon-label { font-size: 8px; }
+  .citizen-footer { width: calc(100% - 24px); padding: 15px 0 calc(87px + env(safe-area-inset-bottom)); border-radius: 0; gap: 10px; }
+  .citizen-footer .council-signature { gap: 6px; }
+  .citizen-footer .council-signature img { width: 28px; height: 28px; }
+  .citizen-footer .council-signature span { font-size: 8px; }
+  .citizen-footer .council-signature strong { font-size: 10px; }
+  .citizen-footer > div:last-child { font-size: 8px; }
+  .citizen-nav { position: fixed; top: auto; bottom: 0; left: 0; right: 0; transform: none; z-index: 50; width: 100%; gap: 0; padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); background: #fffffff7; border: 1px solid #e4ebf3; border-bottom: 0; border-radius: 19px 19px 0 0; box-shadow: 0 -3px 15px #15395b05; }
+  .citizen-nav button { flex: 1; min-width: 0; min-height: 52px; flex-direction: column; padding: 5px 2px; gap: 4px; border-radius: 10px; color: #697e97; font-size: 11px; font-weight: 500; }
+  .citizen-nav button svg { width: 23px; height: 23px; stroke-width: 1.8; }
+  .citizen-nav button.is-active { color: #0068d9; background: transparent; font-weight: 700; }
+  .citizen-nav button.is-active svg { fill: #0068d9; }
+  .citizen-dialog { padding-inline: 24px; border-radius: 22px; }
+  .citizen-dialog h2 { font-size: 23px; }
+  .citizen-dialog p { font-size: 14px; }
+}
+
+@media (max-width: 360px) {
+  .citizen-header-inner { padding-inline: 16px; }
+  .citizen-council-logo { width: 47px; height: 47px; }
+  .citizen-header .brand--compact .brand-name { font-size: 27px; }
+  .citizen-header .brand--compact .brand-subtitle { font-size: 10px; }
+  .citizen-welcome { padding-inline: 17px; }
+  .citizen-welcome h1 { font-size: 20px; }
+  .citizen-zone { font-size: 12px; }
+  .citizen-current .citizen-title-with-icon h2 { font-size: 14px; }
+  .citizen-status--pumping { padding-inline: 8px; font-size: 11px; }
+  .citizen-status--quiet { padding-inline: 5px; font-size: 8px; }
+  .citizen-round-row { grid-template-columns: 14px minmax(65px, 1fr) minmax(123px, 1.6fr) 12px; padding-inline: 6px; gap: 4px; }
+  .citizen-round-description h3 { font-size: 12px; }
+  .citizen-round-date { font-size: 11px; }
+  .citizen-round-date time { gap: 3px; }
+  .citizen-quick-action strong { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .citizen-skeleton { animation: none; }
+}

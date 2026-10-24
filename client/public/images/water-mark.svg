@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 148" fill="none">
+  <defs>
+    <linearGradient id="drop" x1="29" y1="15" x2="89" y2="117" gradientUnits="userSpaceOnUse"><stop stop-color="#49d5f5"/><stop offset=".42" stop-color="#079ce5"/><stop offset="1" stop-color="#0059bb"/></linearGradient>
+    <linearGradient id="wave" x1="13" y1="114" x2="107" y2="140" gradientUnits="userSpaceOnUse"><stop stop-color="#42ceef"/><stop offset="1" stop-color="#0067c4"/></linearGradient>
+  </defs>
+  <path d="M60 4C49 24 22 58 22 80a38 38 0 0 0 76 0C98 58 72 25 60 4Z" fill="url(#drop)" stroke="white" stroke-width="2.5"/>
+  <path d="M33 67c-9 19-6 31 9 39" stroke="#b8f0ff" stroke-width="4" stroke-linecap="round"/>
+  <path d="M7 109c35-17 60 24 105-1l-6 16c-39 25-68-15-94 0l-5-15Z" fill="url(#wave)" stroke="white" stroke-width="3.5"/>
+  <path d="M17 130c31-11 53 20 86-1l-8 12c-30 17-52-9-72-2l-6-9Z" fill="url(#wave)" stroke="white" stroke-width="2.5"/>
+</svg>
