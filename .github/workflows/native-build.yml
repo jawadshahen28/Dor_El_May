@@ -1,0 +1,41 @@
+name: Native dependency builds
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.22.1'
+          cache: npm
+      - name: Show runtime versions
+        run: |
+          node --version
+          npm --version
+      - name: Install from the committed lockfile
+        run: npm ci --include=dev
+      - name: Check native variants and run unit tests
+        run: npm test
+      - name: Build the production frontend
+        run: npm run build
+      - name: Ensure installation did not rewrite the lockfile
+        run: git diff --exit-code -- package-lock.json

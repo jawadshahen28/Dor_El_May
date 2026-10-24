@@ -2,6 +2,17 @@
 
 نُفّذت الأوامر داخل مجلد المشروع على Windows باستخدام Node.js 24.12.0 وnpm 11.6.2.
 
+## إصلاح تبعيات Linux الأصلية في Render — 25 أكتوبر 2026
+
+- ثبت أن `package-lock.json` السابق يتضمن تعريفات optionalDependencies للأصول الأصلية، لكنه لا يتضمن السجلات المحلولة لـLinux x64 GNU في Rollup وTailwind Oxide وLightning CSS وesbuild؛ كانت سجلات المنصات الأصلية المحفوظة خاصة بـWindows. يفسّر هذا تعذّر تحميل وحدة Rollup من `dist/native.js` في Render، ويتوافق مع مشكلة npm المعروفة في توليد lockfile اعتمادًا على `node_modules` خاص بمنصة واحدة.
+- أُعيد توليد lockfile بواسطة npm في مجلد مؤقت نظيف يحتوي ملفات workspace `package.json` الأصلية فقط، دون lockfile سابق أو `node_modules`. استُعيد **77 سجل حزمة** مفقودًا، مع بيانات resolved/integrity اللازمة للتثبيت القابل للتكرار. لم تتغير إصدارات أي من الحزم الموجودة، ولم تُستبدل أي قيمة integrity كانت مسجلة سابقًا. تتضمن الأصول المستعادة Linux GNU وmusl والمنصات الأخرى، وتبقى تبعيات Windows محفوظة.
+- تضمنت الحزم المحددة لـRender: `@rollup/rollup-linux-x64-gnu` و`@napi-rs/lzma-linux-x64-gnu` و`@tailwindcss/oxide-linux-x64-gnu` و`lightningcss-linux-x64-gnu` و`@esbuild/linux-x64`. لم تُضف حزمة Linux إلزامية إلى ملفات package.json ولم تُعطّل optionalDependencies.
+- أُضيف اختباران في `server/test/nativeDependencies.test.js`: أعادا إنتاج الفشل مع lockfile القديم، ثم نجحا مع الملف المعاد توليده. يتحققان من اكتمال السجلات لكل الأصول المعلنة ومن دعم Linux GNU وWindows x64 مع الإصدارات والتكامل الصحيحين.
+- نجح `npm ci --include=dev` ثم `npm run build` في نسخة Windows نظيفة مع lockfile الجديد. بقي lockfile مطابقًا بايتًا ببايت بعد التثبيت، ونجحت اختبارات الوحدة **29/29** في النسخة النظيفة وفي المشروع. نجحت اختبارات MongoDB **56/56** واختبارات خادم الإنتاج **4/4** واختبارات Chrome **26/26**؛ الإجمالي **115 اختبارًا ناجحًا**.
+- لا يتوفر Docker أو WSL مثبت محليًا. أُضيف `.github/workflows/native-build.yml` لتشغيل تثبيت نظيف واختبارات الوحدة وبناء الإنتاج وفحص عدم إعادة كتابة lockfile على Ubuntu وWindows بإصدار Node **24.22.1**. لا تتضمن هذه الوثيقة ادعاء تشغيل Linux محلي؛ نتيجة Linux الفعلية تُراجع في [تشغيل GitHub Actions للالتزام](https://github.com/jawadshahen28/Dor_El_May/actions/workflows/native-build.yml) بعد دفعه.
+- بقي أمرا Render `npm ci --include=dev && npm run build` و`npm start` كما هما. لم تتغير ملفات الواجهة أو إعدادات المصادقة أو قاعدة البيانات. أُثبت تطابق hash لملف `server/.env` المحلي قبل الإصلاح وبعده دون طباعة أي قيمة منه. لا تُنسخ أسرار البيئة إلى مجلدات الاختبار أو workflow.
+- الملفات المتغيرة: `package-lock.json`، `server/test/nativeDependencies.test.js`، `.github/workflows/native-build.yml`، `RENDER_DEPLOY.md`، `VERIFICATION.md`.
+
 ## تجهيز GitHub وRender — 25 أكتوبر 2026
 
 - أُعدّت خدمة Node Web Service واحدة تخدم React المبني وExpress API من أصل HTTPS واحد. لم يُنشأ مستودع GitHub أو خدمة Render ولم يُنفّذ نشر أو عمل PWA. الإعدادات والأوامر وخطوات staging والتحقق واستكشاف الأخطاء في [RENDER_DEPLOY.md](RENDER_DEPLOY.md).
