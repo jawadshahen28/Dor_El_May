@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomBytes, createECDH } from 'node:crypto';
-import { loadPushConfig } from '../src/config/push.js';
+import { loadPushConfig, pushDatabaseAllowed } from '../src/config/push.js';
 import { validateSubscription, validPushEndpoint, encryptSubscription, decryptSubscription } from '../src/services/pushSubscriptions.js';
 import { publicAddress, sendWebPush } from '../src/services/pushTransport.js';
 import { processPushBatch } from '../src/services/pushProcessor.js';
@@ -18,6 +18,35 @@ test('outbound sending defaults off and cannot be enabled without all staging ga
   let sent = 0;
   const result = await processPushBatch({ config: loadPushConfig({}), transport: () => { sent++; } });
   assert.equal(sent, 0); assert.equal(result.enabled, false);
+});
+test('push configuration supports normal dor_el_may operation without mandatory test user allowlist', () => {
+  assert.equal(pushDatabaseAllowed('dor_el_may'), true);
+  assert.equal(pushDatabaseAllowed('dor_el_may_staging'), true);
+  assert.equal(pushDatabaseAllowed('isolated_staging_test'), true);
+  assert.equal(pushDatabaseAllowed('other_database'), false);
+  assert.equal(pushDatabaseAllowed(''), false);
+  const pair = createECDH('prime256v1'); pair.generateKeys();
+  const valid = {
+    VAPID_PUBLIC_KEY: pair.getPublicKey().toString('base64url'),
+    VAPID_PRIVATE_KEY: pair.getPrivateKey().toString('base64url'),
+    VAPID_SUBJECT: 'mailto:tests@example.invalid',
+    PUSH_SUBSCRIPTION_KEY: randomBytes(32).toString('base64url'),
+    PUSH_OUTBOUND_ENABLED: 'true',
+    PUSH_CONFIRMED: 'true',
+    PUSH_DATABASE: 'dor_el_may',
+    PUSH_DELIVERY_NOT_BEFORE: new Date().toISOString(),
+  };
+  const normalConfig = loadPushConfig(valid);
+  assert.equal(normalConfig.enabled, true);
+  assert.equal(normalConfig.databaseName, 'dor_el_may');
+  assert.deepEqual(normalConfig.testUserIds, []);
+  const stagingFallback = loadPushConfig({ ...valid, PUSH_DATABASE: '', PUSH_STAGING_DATABASE: 'dor_el_may', PUSH_CONFIRMED: '', PUSH_STAGING_CONFIRMED: 'true' });
+  assert.equal(stagingFallback.enabled, true);
+  assert.equal(stagingFallback.databaseName, 'dor_el_may');
+  const withAllowlist = loadPushConfig({ ...valid, PUSH_TEST_USER_IDS: '0123456789abcdef01234567' });
+  assert.deepEqual(withAllowlist.testUserIds, ['0123456789abcdef01234567']);
+  assert.throws(() => loadPushConfig({ ...valid, PUSH_TEST_USER_IDS: 'invalid-id' }));
+  assert.throws(() => loadPushConfig({ ...valid, PUSH_DATABASE: 'invalid_db_name' }));
 });
 test('subscription endpoint/provider validation and public-only DNS rules reject SSRF targets', () => {
   for (const endpoint of ['http://fcm.googleapis.com/x', 'https://127.0.0.1/x', 'https://evil.example/x', 'https://fcm.googleapis.com.evil.example/x', 'https://fcm.googleapis.com:444/x', 'https://user:pass@fcm.googleapis.com/x', 'https://fcm.googleapis.com/x#fragment']) assert.equal(validPushEndpoint(endpoint), false);

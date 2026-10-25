@@ -136,6 +136,55 @@ test('published schedules use existing durable events and target only opted-in a
   assert.equal((await WaterRound.findById(round.id).select('+notificationEvents')).notificationEvents.length, 1);
   await batch(); assert.equal(calls.length, 1); assert.equal(await PushEvent.countDocuments(), 1); assert.equal(await PushDelivery.countDocuments(), 1);
 });
+test('normal operation without allowlist notifies all subscribed residents in the published/pumping zone only', async () => {
+  const normalConfig = loadPushConfig({
+    ...pushSource,
+    PUSH_OUTBOUND_ENABLED: 'true',
+    PUSH_CONFIRMED: 'true',
+    PUSH_DATABASE: databaseName,
+    PUSH_DELIVERY_NOT_BEFORE: new Date(now).toISOString(),
+  });
+  assert.equal(normalConfig.testUserIds.length, 0);
+  const [sub0, sub1, sub2] = await Promise.all([optIn(0), optIn(1), optIn(2)]);
+  const normalCalls = [];
+  const normalBatch = (transport = async (sub, payload) => { normalCalls.push({ sub, payload }); return { statusCode: 201 }; }) =>
+    processPushBatch({ config: normalConfig, sessionSecret: config.sessionSecret, transport, clock: () => new Date(now) });
+
+  const armResult = await normalBatch();
+  assert.equal(armResult.armed, true);
+  now += 1000;
+
+  const roundZone0 = await publish(zones[0]);
+  const scheduleBatchResult = await normalBatch();
+  assert.equal(scheduleBatchResult.sent, 2);
+  assert.equal(normalCalls.length, 2);
+  assert.ok(normalCalls.every((c) => c.payload.type === 'schedule_published'));
+  const scheduleEndpoints = normalCalls.map((c) => c.sub.endpoint);
+  assert.ok(scheduleEndpoints.includes(sub0.input.endpoint));
+  assert.ok(scheduleEndpoints.includes(sub2.input.endpoint));
+  assert.ok(!scheduleEndpoints.includes(sub1.input.endpoint));
+
+  now += 100;
+  await changeCouncilRound(admin, roundZone0.id, 'start', { revision: roundZone0.revision }, { now: new Date(now) });
+  const pumpingBatchResult = await normalBatch();
+  assert.equal(pumpingBatchResult.sent, 2);
+  assert.equal(normalCalls.length, 4);
+  const pumpingCalls = normalCalls.slice(2);
+  assert.ok(pumpingCalls.every((c) => c.payload.type === 'pumping_started'));
+  const pumpingEndpoints = pumpingCalls.map((c) => c.sub.endpoint);
+  assert.ok(pumpingEndpoints.includes(sub0.input.endpoint));
+  assert.ok(pumpingEndpoints.includes(sub2.input.endpoint));
+  assert.ok(!pumpingEndpoints.includes(sub1.input.endpoint));
+
+  now += 100;
+  const roundZone1 = await publish(zones[1]);
+  const zone1BatchResult = await normalBatch();
+  assert.equal(zone1BatchResult.sent, 1);
+  assert.equal(normalCalls.length, 5);
+  const zone1Call = normalCalls[4];
+  assert.equal(zone1Call.payload.type === 'schedule_published', true);
+  assert.equal(zone1Call.sub.endpoint, sub1.input.endpoint);
+});
 test('drafts and edits emit nothing; start emits once and completion emits no event', async () => {
   await optIn(); await arm();
   const draft = (await createCouncilRound(admin, { zoneId: String(zones[0]._id), scheduledDate: '2095-01-01', requestId: randomUUID() })).round;

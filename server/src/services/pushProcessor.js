@@ -5,6 +5,7 @@ import { PushEvent, PushDelivery, PushWorkerState } from '../models/PushDelivery
 import { WaterRound } from '../models/WaterRound.js';
 import { Announcement } from '../models/Announcement.js';
 import { User } from '../models/User.js';
+import { pushDatabaseAllowed } from '../config/push.js';
 import { decryptSubscription, digest, pushSessionHash } from './pushSubscriptions.js';
 import { sendWebPush } from './pushTransport.js';
 
@@ -47,7 +48,7 @@ export async function processPushBatch({ config, sessionSecret, transport = send
   const report = { enabled: false, armed: false, projected: 0, queued: 0, sent: 0, skipped: 0, retried: 0, failed: 0 };
   // No database reads, state creation, queues or transport calls while disabled.
   if (!config.enabled) return report;
-  if (!config.configured || !config.confirmed || typeof sessionSecret !== 'string' || sessionSecret.length < 32 || mongoose.connection.name !== config.databaseName || !/(?:staging|stage|test)/i.test(config.databaseName) || !config.testUserIds.length || !Number.isFinite(+config.cutoff)) throw new Error('Push staging safety gate blocked processing.');
+  if (!config.configured || !config.confirmed || typeof sessionSecret !== 'string' || sessionSecret.length < 32 || mongoose.connection.name !== config.databaseName || !pushDatabaseAllowed(config.databaseName) || !Number.isFinite(+config.cutoff)) throw new Error('Push safety gate blocked processing.');
   report.enabled = true;
   await Promise.all([PushEvent.init(), PushDelivery.init(), PushWorkerState.init(), PushSubscription.init()]);
   const now = clock(), stateId = config.campaignId;
@@ -66,7 +67,7 @@ export async function processPushBatch({ config, sessionSecret, transport = send
     for (const event of events) {
       if (Date.now() > deadline) break;
       if (!await sourceCurrent(event, now)) { await PushEvent.updateOne({ _id: event._id }, { $set: { fanoutDone: true } }); continue; }
-      const candidates = await PushSubscription.find({ active: true, userId: { $in: config.testUserIds }, consentAt: { $lte: event.occurredAt }, keyVersion: config.keyVersion,
+      const candidates = await PushSubscription.find({ active: true, ...(config.testUserIds.length ? { userId: { $in: config.testUserIds } } : {}), consentAt: { $lte: event.occurredAt }, keyVersion: config.keyVersion,
         ...(event.cursor ? { _id: { $gt: event.cursor } } : {}), $or: [{ expiresAt: null }, { expiresAt: { $gt: now } }] }).select('+binding').sort({ _id: 1 }).limit(100).lean();
       for (const subscription of candidates) {
         if (Date.now() > deadline) break;
@@ -89,7 +90,7 @@ export async function processPushBatch({ config, sessionSecret, transport = send
       const finish = (values) => PushDelivery.updateOne({ _id: delivery._id, leaseToken, status: 'sending' }, { $set: { ...values, leaseUntil: null, leaseToken: null } });
       const [event, subscription] = await Promise.all([PushEvent.findById(delivery.eventId).lean(), PushSubscription.findById(delivery.subscriptionId).select('+binding +keyVersion +encrypted +installationHash +sessionHash').lean()]);
       if (!event || event.expiresAt <= at || !subscription?.active || subscription.binding !== delivery.binding || subscription.keyVersion !== config.keyVersion
-        || !config.testUserIds.includes(String(subscription.userId)) || subscription.consentAt > event.occurredAt || (subscription.expiresAt && subscription.expiresAt <= at) || !await sourceCurrent(event, at)) {
+        || (config.testUserIds.length && !config.testUserIds.includes(String(subscription.userId))) || subscription.consentAt > event.occurredAt || (subscription.expiresAt && subscription.expiresAt <= at) || !await sourceCurrent(event, at)) {
         await finish({ status: 'skipped', lastCode: 'ineligible' }); report.skipped++; continue;
       }
       const user = await User.findOne({ _id: subscription.userId, ...activeResident }).select('zoneId').lean();

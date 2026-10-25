@@ -55,12 +55,12 @@ These settings are optional while push is unconfigured/disabled. Existing databa
 | `VAPID_PRIVATE_KEY` | Matching private key, in server/worker secret storage only. |
 | `VAPID_SUBJECT` | Valid Council contact mailto or external HTTPS URI; avoid localhost. |
 | `PUSH_SUBSCRIPTION_KEY` | Separate 32-byte base64url AES-GCM key. Losing/changing it makes old subscription ciphertext unreadable. |
-| `PUSH_STAGING_CONFIRMED` | Defaults false. Operator attestation that database/credentials are isolated and listed testers consented; it cannot prove Atlas ACLs/data provenance automatically. |
-| `PUSH_STAGING_DATABASE` | Exact database name, matching the connected database and containing staging/stage/test. Does not alter `MONGODB_URI`. |
-| `PUSH_TEST_USER_IDS` | Comma-separated ObjectIds of consenting staging residents, maximum 20. No other users can receive sends. Use only the two device testers initially. |
+| `PUSH_CONFIRMED` | Defaults false. Operator confirmation to enable delivery on the configured database. (`PUSH_STAGING_CONFIRMED` also accepted). |
+| `PUSH_DATABASE` | Exact database name matching the connected database (`dor_el_may` or a staging/test database name). (`PUSH_STAGING_DATABASE` also accepted). Does not alter `MONGODB_URI`. |
+| `PUSH_TEST_USER_IDS` | Optional comma-separated ObjectIds of consenting residents for restricted testing. When omitted or empty, delivery operates normally for all subscribed residents in the relevant neighborhood. |
 | `PUSH_DELIVERY_NOT_BEFORE` | Fresh ISO instant for the authorized campaign. Only events strictly after both this instant and the first enabled-run activation are eligible. |
 
-Delivery currently enforces staging-only allowlisted sending. General citizen rollout requires a separate reviewed authorization/change after device acceptance; configuring VAPID does not enable village-wide delivery.
+When `PUSH_TEST_USER_IDS` is omitted, the worker operates normally for all subscribed active residents belonging to the published/pumping water round's neighborhood. Configuring an allowlist is optional and reserved for restricted testing.
 
 The optional explicit command `npm run push:keys` writes fresh keys to ignored `.local/push-staging.env`, prints no secret values, refuses overwrite and leaves `server/.env` unchanged. It is never called by build/start/deploy. Transfer values privately to authorized staging secret settings, never chat/Git/logs/command arguments. No deployment keys were generated here; key-helper tests used disposable ignored fixture folders only.
 
