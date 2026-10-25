@@ -221,7 +221,7 @@ test('announcement session expiry clears protected content and shared placeholde
   await expect(page.locator('.account-fields').getByText('مواطن اختبار الإعلانات', { exact: true })).toBeVisible();
   await page.goBack();
   await page.getByRole('button', { name: 'الإشعارات', exact: true }).click();
-  await expect(page.getByRole('dialog').getByText(/خدمة الإشعارات قيد التجهيز/)).toBeVisible();
+  await expect(page.getByRole('dialog').getByText(/خدمة الإشعارات غير مهيأة على الخادم/)).toBeVisible();
   await page.getByRole('button', { name: 'إغلاق', exact: true }).click();
   const me = (await (await page.request.get('/api/auth/me')).json()).data;
   await page.request.post('/api/auth/logout', { headers: { Origin: 'http://127.0.0.1:4173', 'X-CSRF-Token': me.csrfToken }, data: {} });

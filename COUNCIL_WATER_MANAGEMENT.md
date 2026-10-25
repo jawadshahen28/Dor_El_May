@@ -46,7 +46,7 @@ Each transition compares both the current revision and eligible state in one `fi
 
 Internal audit, request fingerprints and notification intents are excluded from API DTOs, including citizen reads. No administrator identity is accepted from the client. The original publication rules, registered-neighborhood next-round query and explicit pumping status continue to drive citizen Home, Schedule and admin Dashboard.
 
-Schedule publication and pumping start record deterministic internal event keys for future processing. Nothing currently dispatches them. Draft/edit/end/cancel actions produce no notification event. Announcement publication is future work; see [NOTIFICATION_READINESS.md](NOTIFICATION_READINESS.md).
+Schedule publication and pumping start record deterministic internal event keys. The separate processor can consume fresh eligible intents after explicit staging activation; outbound sending is disabled by default. Draft/edit/end/cancel actions produce no notification event. Announcement publication is future work; see [WEB_PUSH.md](WEB_PUSH.md) and [NOTIFICATION_READINESS.md](NOTIFICATION_READINESS.md).
 
 ## Verification and deployment
 

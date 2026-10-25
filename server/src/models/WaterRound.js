@@ -42,5 +42,6 @@ waterRoundSchema.index({ zoneId: 1, status: 1, scheduledDate: 1, scheduledTime: 
 waterRoundSchema.index({ updatedAt: -1, publishedAt: 1 });
 waterRoundSchema.index({ scheduledDate: 1, scheduledTime: 1, _id: 1 });
 waterRoundSchema.index({ creationKey: 1 }, { unique: true, partialFilterExpression: { creationKey: { $type: 'string' } } });
+waterRoundSchema.index({ 'notificationEvents.occurredAt': 1 });
 
 export const WaterRound = mongoose.model('WaterRound', waterRoundSchema);

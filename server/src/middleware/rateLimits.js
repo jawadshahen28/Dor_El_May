@@ -36,6 +36,7 @@ export async function createRateLimits(connection) {
   });
   return {
     general: make('general', 300, 15 * 60 * 1000),
+    pushUser: make('push-user', 30, 60 * 60 * 1000, { keyGenerator: (req) => String(req.user._id) }),
     loginIp: make('login-ip', 25, 15 * 60 * 1000),
     adminLoginIp: make('admin-login-ip', 25, 15 * 60 * 1000),
     adminLoginPhone: make('admin-login-phone', 10, 15 * 60 * 1000, {

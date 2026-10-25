@@ -1,4 +1,7 @@
 import { STATIC_CACHE_PREFIX, MAX_STATIC_VERSIONS, isApiPath, isPublicStaticUrl, isVersionedAsset } from './pwa/cachePolicy.js';
+import { setupWorkerPush } from './notifications/workerPush.js';
+
+setupWorkerPush(self);
 
 // Vite PWA injects content revisions here. There is no cached application shell
 // or runtime data cache: this list is restricted again before anything is stored.

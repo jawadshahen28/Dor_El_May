@@ -1,10 +1,12 @@
 import { randomBytes } from 'node:crypto';
+import { revokePushSession } from '../services/pushSubscriptions.js';
 
 export function csrfToken(req) {
   req.session.csrfToken ||= randomBytes(32).toString('hex');
   return req.session.csrfToken;
 }
 export async function establishSession(req, userId) {
+  await revokePushSession(req.sessionID, req.app.locals.pushSessionSecret);
   await new Promise((resolve, reject) => req.session.regenerate((error) => error ? reject(error) : resolve()));
   req.session.userId = String(userId);
   const token = csrfToken(req);

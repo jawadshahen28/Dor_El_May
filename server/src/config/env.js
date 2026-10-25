@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'node:url';
+import { loadPushConfig } from './push.js';
 
 export const envFilePath = fileURLToPath(new URL('../../.env', import.meta.url));
 const envResult = dotenv.config({ path: envFilePath, quiet: true });
@@ -49,5 +50,6 @@ export function loadConfig(source = process.env) {
     production, port, host: source.HOST || (production ? '0.0.0.0' : '127.0.0.1'), mongoUri,
     sessionSecret: secret, sessionDays, trustProxyHops, origins,
     cookieName: production ? '__Host-door.sid' : 'door.sid',
+    push: loadPushConfig(source),
   };
 }

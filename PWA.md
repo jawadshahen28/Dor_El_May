@@ -1,6 +1,6 @@
 # دور المي — installable PWA
 
-Door El May remains the same React/Vite application, Express service, MongoDB database, account system, and Arabic RTL interface. The PWA adds installation metadata, icons, a static-only service worker, offline guidance, and user-controlled updates. It adds no push notifications, background submission queue, production secrets, or second application.
+Door El May remains the same React/Vite application, Express service, MongoDB database, account system, and Arabic RTL interface. The PWA adds installation metadata, icons, a static-only cache, offline guidance, and user-controlled updates. Installation alone enables no push notifications. Subsequent optional push infrastructure is documented in [WEB_PUSH.md](WEB_PUSH.md), with sending disabled by default; it reuses this worker without caching APIs. There is no background submission queue or second application.
 
 Staging: <https://dor-el-may-talfit-staging.onrender.com>. Installation belongs to this origin; a future production domain is a separate installation.
 

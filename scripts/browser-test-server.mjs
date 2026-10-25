@@ -12,6 +12,8 @@ import { WaterRound } from '../server/src/models/WaterRound.js';
 import { Announcement } from '../server/src/models/Announcement.js';
 import { CitizenReport } from '../server/src/models/CitizenReport.js';
 import { hashPassword } from '../server/src/utils/password.js';
+import webpush from 'web-push';
+import { randomBytes } from 'node:crypto';
 
 // Dedicated disposable database. Never use developer credentials or Atlas in UI tests.
 const mongo = await MongoMemoryServer.create({ binary: { downloadDir: fileURLToPath(new URL('../.cache/mongodb', import.meta.url)) } });
@@ -41,7 +43,16 @@ await User.insertMany([
   { fullName: 'مواطن تثبيت أول', phone: '0596911111', passwordHash: pwaPasswordHash, zoneId: zones[0]._id },
   { fullName: 'مواطن تثبيت ثان', phone: '0596922222', passwordHash: pwaPasswordHash, zoneId: zones[1]._id },
 ]);
-const config = loadConfig({ SESSION_SECRET: 'temporary-browser-test-session-secret-32-characters', APP_ORIGINS: 'http://127.0.0.1:4173' });
+// Opt-in is exercised with ephemeral keys only in this disposable fixture. Sending is ALWAYS disabled.
+const pushFixture = process.env.PUSH_UI_TESTING === '1';
+const fixtureKeys = pushFixture ? webpush.generateVAPIDKeys() : null;
+if (pushFixture) {
+  const passwordHash = await hashPassword('PushBrowserFixture9!');
+  await User.insertMany(Array.from({ length: 8 }, (_, index) => ({ fullName: 'مواطن اختبار إشعارات المتصفح', phone: `05977${String(index).padStart(5, '0')}`, passwordHash, zoneId: zones[index % 2]._id })));
+}
+const config = loadConfig({ SESSION_SECRET: 'temporary-browser-test-session-secret-32-characters', APP_ORIGINS: 'http://127.0.0.1:4173',
+  ...(pushFixture ? { VAPID_PUBLIC_KEY: fixtureKeys.publicKey, VAPID_PRIVATE_KEY: fixtureKeys.privateKey, VAPID_SUBJECT: 'mailto:tests@example.invalid', PUSH_SUBSCRIPTION_KEY: randomBytes(32).toString('base64url') } : {}),
+});
 const store = MongoStore.create({ client: connection.getClient(), collectionName: 'sessions' });
 store.on('error', () => console.error('Browser test session store error.'));
 const app = createApp({ config, store, limits: await createRateLimits(connection), isDatabaseAvailable: databaseAvailable });

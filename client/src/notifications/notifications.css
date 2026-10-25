@@ -1,0 +1,12 @@
+.push-controls { text-align: right; width: 100%; }
+.push-controls > p { color: #5b738c; line-height: 1.9; font-size: 14px; margin-block: 15px; }
+.push-controls dl { margin-block: 18px; background: #f4f8fc; border-radius: 9px; padding: 13px; }
+.push-controls dl > div { display: flex; justify-content: space-between; gap: 12px; padding-block: 7px; font-size: 13px; }
+.push-controls dt { color: #6a8095; }
+.push-controls dd { margin: 0; color: #204d76; }
+.push-controls .push-guidance { font-size: 13px; }
+.push-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.push-actions button { padding: 12px 16px; min-height: 44px; background: #1468c4; color: white; border: 1px solid #1468c4; border-radius: 8px; font-size: 13px; }
+.push-actions button:last-child { color: #4b6c89; background: white; border-color: #dce7f0; }
+.push-actions button:disabled { opacity: .5; cursor: not-allowed; }
+.citizen-dialog:has(.push-controls) { max-height: calc(100svh - 32px); overflow-y: auto; }

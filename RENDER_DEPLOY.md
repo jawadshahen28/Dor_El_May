@@ -4,6 +4,8 @@ Originally prepared on 25 October 2026. The project has since been uploaded to G
 
 ## Service settings
 
+Optional Web Push infrastructure is documented in [WEB_PUSH.md](WEB_PUSH.md). Keep `PUSH_OUTBOUND_ENABLED=false`; configuring/deploying the website does not run the sender. New push variable names are `PUSH_OUTBOUND_ENABLED`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `PUSH_SUBSCRIPTION_KEY`, `PUSH_STAGING_CONFIRMED`, `PUSH_STAGING_DATABASE`, `PUSH_TEST_USER_IDS`, `PUSH_DELIVERY_NOT_BEFORE`. They are not required for ordinary login/admin/PWA operation while push is unconfigured. Before an explicitly authorized real device test, verify isolated staging credentials/accounts and follow that guide. A separately provisioned Render Cron Job can run `npm run push:process` every minute; no cron, service, real keys or sending activation is created automatically.
+
 Use **one Render Web Service with the native Node runtime**. Express serves both `client/dist` and `/api` on one HTTPS origin; no second frontend service, CORS exception, or Vite production server is needed. [Render Express deployment guide](https://render.com/docs/deploy-node-express-app).
 
 | Setting | Exact selection |

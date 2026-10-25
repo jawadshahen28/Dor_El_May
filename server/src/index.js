@@ -9,6 +9,7 @@ import { Zone } from './models/Zone.js';
 import { WaterRound } from './models/WaterRound.js';
 import { Announcement } from './models/Announcement.js';
 import { CitizenReport } from './models/CitizenReport.js';
+import { PushSubscription } from './models/PushSubscription.js';
 import { createRateLimits } from './middleware/rateLimits.js';
 import { getDummyHash } from './utils/password.js';
 import { formatDatabaseError } from './utils/databaseDiagnostics.js';
@@ -29,7 +30,7 @@ if (config.mongoUri) {
     connection.on('disconnected', () => console.warn('MongoDB disconnected; protected APIs are unavailable until recovery.'));
     connection.on('reconnected', () => console.log('MongoDB reconnected.'));
     stage = 'indexes';
-    await Promise.all([User.init(), Zone.init(), WaterRound.init(), Announcement.init(), CitizenReport.init()]);
+    await Promise.all([User.init(), Zone.init(), WaterRound.init(), Announcement.init(), CitizenReport.init(), PushSubscription.init()]);
     store = MongoStore.create({ client: connection.getClient(), collectionName: 'sessions', ttl: config.sessionDays * 86400 });
     store.on('error', () => console.error('Session store unavailable.'));
     limits = await createRateLimits(connection);

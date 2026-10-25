@@ -5,6 +5,7 @@ import { normalizeName, validateLogin, validateRegistration } from '@door-el-may
 import { ApiError, success } from '../utils/response.js';
 import { hashPassword, verifyPassword, getDummyHash } from '../utils/password.js';
 import { csrfToken, establishSession, publicUser } from '../utils/session.js';
+import { revokePushSession } from '../services/pushSubscriptions.js';
 
 const validate = (errors) => {
   if (Object.keys(errors).length) throw new ApiError(422, 'VALIDATION_ERROR', 'يرجى مراجعة الحقول الموضّحة.', errors);
@@ -42,6 +43,7 @@ export async function me(req, res) {
     user = await User.findById(req.session.userId).populate('zoneId', 'name');
     if (!user || user.status !== 'active') {
       user = null;
+      await revokePushSession(req.sessionID, req.app.locals.pushSessionSecret);
       await new Promise((resolve, reject) => req.session.regenerate((error) => error ? reject(error) : resolve()));
     }
   }
@@ -49,6 +51,7 @@ export async function me(req, res) {
 }
 
 export const logout = (config) => async (req, res) => {
+  await revokePushSession(req.sessionID, config.sessionSecret);
   await new Promise((resolve, reject) => req.session.destroy((error) => error ? reject(error) : resolve()));
   res.clearCookie(config.cookieName, { httpOnly: true, secure: config.production, sameSite: 'lax', path: '/' });
   return success(res, { user: null });

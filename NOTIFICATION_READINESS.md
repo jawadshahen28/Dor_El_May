@@ -1,8 +1,16 @@
-# Web Push readiness audit and implementation plan
+# Web Push implementation and readiness
+
+Phase 3 Prompt 3 implemented Arabic opt-in/opt-out controls, encrypted authenticated subscriptions, durable processing with retries/leases, and service-worker push/click/deduplication handling. **Real outbound sending remains disabled by default and has not been authorized or tested on physical devices.**
+
+See [WEB_PUSH.md](WEB_PUSH.md) for the current API/models, exact environment names, Render Cron command, safety gates and Android/iPhone staging procedure. The first enabled run arms a fresh campaign and sends nothing; processing is restricted to a confirmed isolated staging database and consenting allowlisted accounts. Historical events are not replayed. The future announcement publisher still needs its atomic event hook; no announcement management UI/API was added.
+
+The findings and plan below are retained as historical **pre-implementation** context, not current source status.
+
+## Historical audit — before Phase 3 Prompt 3
 
 Audit date: 2026-10-25. **Real Web Push is not implemented or enabled.** Installing this PWA does not subscribe a citizen or grant notification permission. No real notification was sent, no VAPID key was generated, and no live subscription/resident database was used in testing.
 
-## Current implementation, verified from source
+### Historical implementation findings
 
 | Area | Exact current status |
 | --- | --- |

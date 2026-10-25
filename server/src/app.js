@@ -11,12 +11,14 @@ import { waterRoundRoutes } from './routes/waterRoundRoutes.js';
 import { announcementRoutes } from './routes/announcementRoutes.js';
 import { reportRoutes } from './routes/reportRoutes.js';
 import { adminRoutes } from './routes/adminRoutes.js';
+import { notificationRoutes } from './routes/notificationRoutes.js';
 import { csrfProtection } from './middleware/csrf.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { failure, success } from './utils/response.js';
 
 export function createApp({ config, store, limits, isDatabaseAvailable, checkDatabaseHealth }) {
   const app = express();
+  app.locals.pushSessionSecret = config.sessionSecret;
   app.disable('x-powered-by');
   if (config.trustProxyHops) app.set('trust proxy', config.trustProxyHops);
   app.use(helmet({
@@ -54,6 +56,7 @@ export function createApp({ config, store, limits, isDatabaseAvailable, checkDat
     app.use('/api/water-rounds', waterRoundRoutes);
     app.use('/api/announcements', announcementRoutes);
     app.use('/api/reports', reportRoutes(limits));
+    app.use('/api/notifications', notificationRoutes(config, limits));
   }
   app.use('/api', (_req, res) => failure(res, 404, 'NOT_FOUND', 'الصفحة المطلوبة غير موجودة.'));
   const clientDirectory = fileURLToPath(new URL('../../client/dist/', import.meta.url));
