@@ -2,6 +2,16 @@
 
 نُفّذت الأوامر داخل مجلد المشروع على Windows باستخدام Node.js 24.12.0 وnpm 11.6.2.
 
+## Persistent in-app notification center
+
+- Added `/notifications`, MongoDB history, server-owned unread/read state, cursor pagination and a badge refreshed on visible revisits and once per minute. Permission-denied citizens keep full inbox access; device activation reuses the existing explicit-click subscription flow. The obsolete experimental sending message is removed.
+- `npm test`: **40 passed**. `npm run test:db`: **94 passed**, including eight new inbox cases and existing normal/allowlisted Web Push targeting, encryption, sessions, retries and deduplication. `npm run test:production`: **5 passed**, including `/notifications` SPA refresh, proxy security, persistent sessions and MongoDB recovery. Production build passed.
+- New integration tests verify publication/start recipients, exclusion of unrelated neighborhoods/disabled accounts, history across logout and devices, account isolation, CSRF/Origin, read counts, tied-time pagination, no TTL, no legacy backfill, snapshot preservation, concurrent interrupted fan-out recovery and Palestine-calendar wording. Every database is disposable/local and all push transport is mocked.
+- The final `npm run test:ui` passed **47 browser tests**: 33 citizen/admin/PWA regressions, six council-water workflows, five device-subscription/worker cases and three new inbox cases. Total: **186 passing tests**. Screenshots at 320/390/768/1440px are ignored local artifacts. Visual review prompted a more compact mobile settings card and readable footer colors. The built worker precaches 51 public static assets, never private APIs.
+- Browser suites now use separate disposable databases per spec, retaining actual production limits. Updated old bell-modal assertions for the new page and awaited fresh page data before simulating session expiry. Builds and browser runs are sequential because concurrent builds temporarily remove the served build directory.
+- The implementation does not change live Render/Cron settings or database/VAPID/encryption/session credentials and never manually triggers a real notification. Protected-file hashes confirm the existing push configuration, processor, transport, worker and local environment files are unchanged. Only newly marked source events get inbox entries; no historic water rounds are automatically backfilled.
+- Architecture, APIs and deployment notes: [IN_APP_NOTIFICATIONS.md](IN_APP_NOTIFICATIONS.md).
+
 ## بنية Web Push — المرحلة الثالثة، الطلب الثالث
 
 - أُضيفت أزرار «تفعيل الإشعارات» و«إيقاف الإشعارات» وحالة الإذن والاشتراك داخل نافذة الجرس الحالية، دون طلب تلقائي للإذن. تدعم الواجهة إرشادات iPhone والتصفح غير المدعوم والحظر، وتوضح صراحة أن الإرسال متوقف. لم يتغير تصميم صفحات المواطن أو المجلس.

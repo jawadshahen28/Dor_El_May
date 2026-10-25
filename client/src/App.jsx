@@ -12,6 +12,7 @@ const SchedulePage = lazy(() => import('./pages/SchedulePage').then((module) => 
 const AnnouncementsRoutes = lazy(() => import('./pages/AnnouncementsRoutes').then((module) => ({ default: module.AnnouncementsRoutes })));
 const CitizenWorkspaceRoutes = lazy(() => import('./pages/CitizenWorkspaceRoutes').then((module) => ({ default: module.CitizenWorkspaceRoutes })));
 const AdminRoutes = lazy(() => import('./pages/admin/AdminRoutes').then((module) => ({ default: module.AdminRoutes })));
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage').then((module) => ({ default: module.NotificationsPage })));
 const adminUser = (user) => ['admin', 'council_admin'].includes(user?.role);
 
 function ProtectedRoute() { const { user } = useAuth(); return adminUser(user) ? <Navigate to="/admin" replace /> : user ? <Outlet /> : <Navigate to="/login" replace />; }
@@ -22,7 +23,7 @@ export default function App() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
-    const titles = { '/login': 'تسجيل الدخول', '/register': 'إنشاء حساب جديد', '/home': 'الرئيسية', '/schedule': 'جدول المياه', '/announcements': 'إعلانات المجلس', '/reports': 'البلاغات', '/account': 'حسابي', '/guest': 'تصفح كزائر' };
+    const titles = { '/login': 'تسجيل الدخول', '/register': 'إنشاء حساب جديد', '/home': 'الرئيسية', '/schedule': 'جدول المياه', '/announcements': 'إعلانات المجلس', '/reports': 'البلاغات', '/account': 'حسابي', '/guest': 'تصفح كزائر', '/notifications': 'الإشعارات' };
     const adminTitles = { '/admin/login': 'تسجيل دخول المجلس', '/admin/water': 'إدارة الضخ', '/admin/schedule': 'إدارة جدول المياه' };
     document.title = `${adminTitles[pathname] || (pathname.startsWith('/admin') ? 'لوحة تحكم المجلس' : titles[pathname]) || (pathname.startsWith('/announcements/') ? 'تفاصيل الإعلان' : 'دور المي')} — دور المي، تلفيت`;
   }, [pathname]);
@@ -33,6 +34,7 @@ export default function App() {
     <Route element={<PublicRoute />}><Route path="/login" element={<LoginPage />} /><Route path="/register" element={<RegisterPage />} /></Route>
     <Route element={<ProtectedRoute />}><Route path="/home" element={<Suspense fallback={<LoadingScreen />}><HomePage /></Suspense>} /><Route path="/schedule" element={<Suspense fallback={<LoadingScreen />}><SchedulePage /></Suspense>} /><Route path="/announcements/*" element={<Suspense fallback={<LoadingScreen />}><AnnouncementsRoutes /></Suspense>} /></Route>
     <Route element={<ProtectedRoute />}><Route path="/reports/*" element={<Suspense fallback={<LoadingScreen />}><CitizenWorkspaceRoutes page="reports" /></Suspense>} /><Route path="/account/*" element={<Suspense fallback={<LoadingScreen />}><CitizenWorkspaceRoutes page="account" /></Suspense>} /></Route>
+    <Route element={<ProtectedRoute />}><Route path="/notifications" element={<Suspense fallback={<LoadingScreen />}><NotificationsPage /></Suspense>} /></Route>
     <Route path="/guest" element={<GuestPage />} />
     <Route path="*" element={<NotFoundPage />} />
   </Routes>;

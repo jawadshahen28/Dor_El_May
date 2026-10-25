@@ -4,7 +4,7 @@ import { Notice } from '../components/Notice';
 import { deviceToken, pushSupported, enableDevicePush, detachLocalPush, reconcileDevicePush, confirmPushDisabled } from './pushClient';
 import './notifications.css';
 
-export function NotificationControls() {
+export function NotificationControls({ inbox = false }) {
   const [config, setConfig] = useState(null), [active, setActive] = useState(false), [loading, setLoading] = useState(true);
   const [permission, setPermission] = useState(() => window.Notification?.permission || 'unsupported');
   const [error, setError] = useState(''), [busy, setBusy] = useState(false);
@@ -51,15 +51,16 @@ export function NotificationControls() {
     finally { setBusy(false); pending.current = false; }
   }
   const permissionLabel = { granted: 'مسموح', denied: 'محظور', default: 'لم يُطلب بعد', unsupported: 'غير مدعوم' }[permission];
-  return <div className="push-controls">
-    <p>اختر استقبال تنبيهات المجلس عن موعد دور حارتك وبدء الضخ. لا تتضمن التنبيهات بياناتك الشخصية.</p>
+  const needsActivation = !loading && !active;
+  return <div className={`push-controls${inbox && needsActivation ? ' push-controls--invitation' : ''}`}>
+    {inbox && needsActivation ? <div className="push-invitation"><span aria-hidden="true">💧</span><div><h2>خلّيك على اطلاع بأخبار المياه</h2><p>فعّل الإشعارات لتصلك مواعيد دور المياه وتنبيهات بدء الضخ في حارتك.</p></div></div> : !inbox && <p>اختر استقبال تنبيهات المجلس عن موعد دور حارتك وبدء الضخ. لا تتضمن التنبيهات بياناتك الشخصية.</p>}
+    {inbox && active && <h2 className="push-settings-heading">إعدادات تنبيهات الجهاز</h2>}
     <dl><div><dt>إذن الإشعارات</dt><dd>{permissionLabel}</dd></div><div><dt>اشتراك هذا الجهاز</dt><dd role="status">{loading ? 'جارٍ التحقق…' : active ? 'مفعّل' : 'غير مفعّل'}</dd></div></dl>
     {iphone && !installed && <p className="push-guidance">على iPhone: افتح الموقع في Safari، ثم مشاركة ← إضافة إلى الشاشة الرئيسية. افتح التطبيق من أيقونته ثم اختر تفعيل الإشعارات. يلزم iOS 16.4 أو أحدث.</p>}
     {!supported && <p className="push-guidance">الإشعارات غير مدعومة في هذا المتصفح أو وضع التصفح. استخدم Chrome على Android أو تطبيق الشاشة الرئيسية على iPhone مع نظام مدعوم وHTTPS.</p>}
     {permission === 'denied' && <p className="push-guidance">السماح بالإشعارات محظور. غيّر الإذن من إعدادات المتصفح أو إعدادات إشعارات الجهاز، ثم أعد فتح التطبيق.</p>}
-    {config && !config.configured && <p className="push-guidance">خدمة الإشعارات غير مهيأة على الخادم بعد. لم يُطلب إذن الإشعارات.</p>}
-    {config?.configured && !config.outboundEnabled && <p className="push-guidance">الإرسال التجريبي متوقف حاليًا. تفعيل الاشتراك لا يعني بدء إرسال تنبيهات.</p>}
+    {config && !config.configured && permission !== 'denied' && <p className="push-guidance">تنبيهات الجهاز غير متاحة حاليًا. يمكنك متابعة إشعاراتك هنا في أي وقت.</p>}
     {error && <Notice onRetry={load}>{error}</Notice>}
-    <div className="push-actions"><button type="button" onClick={enable} disabled={busy || loading || active || !supported || !config?.configured || permission === 'denied' || (iphone && !installed)}>تفعيل الإشعارات</button><button type="button" onClick={disable} disabled={busy || loading || (!active && !deviceToken())}>إيقاف الإشعارات</button></div>
+    <div className="push-actions">{!active && <button type="button" onClick={enable} disabled={busy || loading || !supported || !config?.configured || permission === 'denied' || (iphone && !installed)}>تفعيل الإشعارات</button>}{(active || deviceToken()) && <button type="button" onClick={disable} disabled={busy || loading}>إيقاف الإشعارات</button>}</div>
   </div>;
 }

@@ -1,6 +1,8 @@
-# Web Push infrastructure — sending disabled
+# Web Push infrastructure and citizen history
 
-Arabic notification controls, encrypted authenticated device subscriptions, service-worker notification handling and a durable scheduled processor are implemented. **No real notifications were sent. Outbound delivery is disabled by default.** Web startup never starts a sender, generates deployment keys or requests permission automatically.
+The citizen bell now opens the persistent [in-app notification center](IN_APP_NOTIFICATIONS.md). Its history is independent of device push permission. The existing deployed sender/configuration is preserved; this work neither changes live settings nor sends test notifications. Earlier preparation/testing notes below are historical.
+
+Arabic notification controls, encrypted authenticated device subscriptions, service-worker notification handling and a durable scheduled processor are implemented. Outbound delivery defaults off in code; the operator's existing deployed configuration controls the independent Cron processor. Web startup never starts a sender, generates keys or requests permission automatically. The inbox implementation does not alter deployed sending settings or manually send notifications.
 
 ## Citizen controls and privacy
 

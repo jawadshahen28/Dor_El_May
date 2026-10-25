@@ -11,6 +11,7 @@ import { Zone } from '../server/src/models/Zone.js';
 import { WaterRound } from '../server/src/models/WaterRound.js';
 import { Announcement } from '../server/src/models/Announcement.js';
 import { CitizenReport } from '../server/src/models/CitizenReport.js';
+import { CitizenNotification } from '../server/src/models/CitizenNotification.js';
 import { hashPassword } from '../server/src/utils/password.js';
 import webpush from 'web-push';
 import { randomBytes } from 'node:crypto';
@@ -18,7 +19,7 @@ import { randomBytes } from 'node:crypto';
 // Dedicated disposable database. Never use developer credentials or Atlas in UI tests.
 const mongo = await MongoMemoryServer.create({ binary: { downloadDir: fileURLToPath(new URL('../.cache/mongodb', import.meta.url)) } });
 const connection = await connectDatabase(mongo.getUri('door_el_may_browser_test'));
-await Promise.all([User.init(), Zone.init(), WaterRound.init(), Announcement.init(), CitizenReport.init()]);
+await Promise.all([User.init(), Zone.init(), WaterRound.init(), Announcement.init(), CitizenReport.init(), CitizenNotification.init()]);
 const zones = await Zone.insertMany(['الحارة الوسطى', 'الحارة الغربية', 'الحارة القبلية', 'الحارة التحتا', 'حارة الرويس'].map((name) => ({ name })));
 // Existing tests already exercise the 10/hour registration allowance. Prepare
 // disposable announcement-test citizens here, without weakening any limiter.
@@ -44,6 +45,8 @@ await User.insertMany([
   { fullName: 'مواطن تثبيت ثان', phone: '0596922222', passwordHash: pwaPasswordHash, zoneId: zones[1]._id },
 ]);
 // Opt-in is exercised with ephemeral keys only in this disposable fixture. Sending is ALWAYS disabled.
+const inboxPasswordHash = await hashPassword('InboxBrowser9!');
+await User.insertMany(Array.from({ length: 6 }, (_, index) => ({ fullName: 'مواطن مركز الإشعارات', phone: `05978${String(index).padStart(5, '0')}`, passwordHash: inboxPasswordHash, zoneId: zones[index === 5 ? 1 : 0]._id })));
 const pushFixture = process.env.PUSH_UI_TESTING === '1';
 const fixtureKeys = pushFixture ? webpush.generateVAPIDKeys() : null;
 if (pushFixture) {

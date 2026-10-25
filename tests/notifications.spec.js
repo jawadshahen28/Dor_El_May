@@ -29,13 +29,13 @@ async function setup(page, index, options = {}) {
   await expect(page.getByRole('button', { name: 'الإشعارات', exact: true })).toBeVisible();
   return input;
 }
-async function open(page) { await page.getByRole('button', { name: 'الإشعارات', exact: true }).click(); await expect(page.getByRole('dialog', { name: 'الإشعارات', exact: true })).toBeVisible(); }
+async function open(page) { await page.getByRole('button', { name: 'الإشعارات', exact: true }).click(); await expect(page).toHaveURL(/\/notifications$/); await expect(page.getByRole('heading', { name: 'الإشعارات', exact: true })).toBeVisible(); }
 async function enable(page) { await open(page); await page.getByRole('button', { name: 'تفعيل الإشعارات', exact: true }).click(); await expect(page.getByRole('status')).toHaveText('مفعّل'); }
 
 test('opt-in requires an explicit click; subscription status, opt-out and mobile/desktop controls are honest', async ({ page }) => {
   await setup(page, 0); expect(await page.evaluate(() => window.pushPermissionCalls)).toBe(0);
   await open(page); expect(await page.evaluate(() => window.pushPermissionCalls)).toBe(0);
-  await expect(page.getByText('الإرسال التجريبي متوقف حاليًا.', { exact: false })).toBeVisible();
+  await expect(page.getByText('خلّيك على اطلاع بأخبار المياه', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'تفعيل الإشعارات', exact: true }).click();
   await expect(page.getByRole('status')).toHaveText('مفعّل');
   expect(await page.evaluate(() => window.pushPermissionCalls)).toBe(1); expect(await page.evaluate(() => window.pushSubscribeCalls)).toBe(1);
@@ -60,7 +60,6 @@ test('denied permissions and unsupported iPhone browser modes explain the next s
 test('logout clears the worker/device binding and the next account requires a fresh explicit opt-in', async ({ page }) => {
   await setup(page, 3); await enable(page);
   await page.evaluate(() => { window.fixtureSlowUnsubscribe = true; });
-  await page.getByRole('dialog').getByRole('button', { name: 'إغلاق', exact: true }).click();
   await page.getByRole('button', { name: 'حسابي', exact: true }).click();
   await page.getByRole('button', { name: 'تسجيل الخروج من الحساب', exact: true }).click(); await expect(page).toHaveURL(/\/login$/);
   expect(await page.evaluate(() => sessionStorage.getItem('fixture-push-active'))).toBeNull();

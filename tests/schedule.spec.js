@@ -199,8 +199,10 @@ test('expired sessions leave the schedule and account navigation and notificatio
   await expect(page.locator('.account-fields').getByText('مواطن اختبار الجدول', { exact: true })).toBeVisible();
   await navigation(page).getByRole('button', { name: 'جدول المياه', exact: true }).click();
   await page.getByRole('button', { name: 'الإشعارات', exact: true }).click();
-  await expect(page.getByRole('dialog').getByText(/خدمة الإشعارات غير مهيأة على الخادم/)).toBeVisible();
-  await page.getByRole('button', { name: 'إغلاق', exact: true }).click();
+  await expect(page).toHaveURL(/\/notifications$/);
+  await expect(page.getByRole('heading', { name: 'الإشعارات', exact: true })).toBeVisible();
+  await page.goto('/schedule');
+  await expect(page.getByText('لا توجد أدوار مياه معلنة لهذه الفترة', { exact: true })).toBeVisible();
   const me = (await (await page.request.get('/api/auth/me')).json()).data;
   await page.request.post('/api/auth/logout', { headers: { Origin: 'http://127.0.0.1:4173', 'X-CSRF-Token': me.csrfToken }, data: {} });
   await page.getByRole('button', { name: 'تحديث جدول المياه', exact: true }).click();

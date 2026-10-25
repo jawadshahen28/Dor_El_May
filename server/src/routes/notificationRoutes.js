@@ -3,10 +3,18 @@ import { requireAuth, requireRole } from '../middleware/auth.js';
 import { PushSubscription } from '../models/PushSubscription.js';
 import { deviceHash, pushSessionHash, registerPush } from '../services/pushSubscriptions.js';
 import { success, ApiError } from '../utils/response.js';
+import { getInbox, unreadInboxCount, markInboxRead, markAllInboxRead } from '../services/notificationInbox.js';
 
 export function notificationRoutes(config, limits) {
   const router = Router();
   router.use(requireAuth, requireRole('resident'));
+  router.get('/inbox', async (req, res) => success(res, await getInbox(req.user, req.query)));
+  router.get('/unread-count', async (req, res) => {
+    if (Object.keys(req.query).length) throw new ApiError(422, 'INBOX_INVALID', 'طلب إشعارات غير صالح.');
+    return success(res, { unreadCount: await unreadInboxCount(req.user._id) });
+  });
+  router.post('/read-all', async (req, res) => success(res, await markAllInboxRead(req.user._id, req.body)));
+  router.post('/inbox/:id/read', async (req, res) => success(res, await markInboxRead(req.user._id, req.params.id, req.body)));
   router.get('/config', (req, res) => success(res, { configured: config.push.configured, outboundEnabled: config.push.enabled,
     publicKey: config.push.configured ? config.push.publicKey : null, protocol: 1 }));
   router.get('/subscription', async (req, res) => {

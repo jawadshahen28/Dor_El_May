@@ -11,7 +11,8 @@ import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { PwaProvider } from './pwa/PwaProvider';
 import { NetworkBoundary, PwaNotices } from './pwa/PwaExperience';
+import { InboxProvider } from './notifications/InboxContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode><BrowserRouter><PwaProvider><NetworkBoundary><AuthProvider><App /><PwaNotices /></AuthProvider></NetworkBoundary></PwaProvider></BrowserRouter></React.StrictMode>,
+  <React.StrictMode><BrowserRouter><PwaProvider><NetworkBoundary><AuthProvider><InboxProvider><App /><PwaNotices /></InboxProvider></AuthProvider></NetworkBoundary></PwaProvider></BrowserRouter></React.StrictMode>,
 );

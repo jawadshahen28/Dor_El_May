@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router';
 import { Bell, CalendarDays, CircleAlert, House, LogOut, UserRound } from 'lucide-react';
 import { Brand } from '../Brand';
+import { useInbox } from '../../notifications/InboxContext';
 
 export function BottomNavigation({ onHome, active = 'home' }) {
   const navigate = useNavigate();
@@ -13,13 +14,15 @@ export function BottomNavigation({ onHome, active = 'home' }) {
 }
 
 export function HomeHeader({ onFeature, onLogout, signingOut }) {
+  const navigate = useNavigate();
+  const { unreadCount } = useInbox();
   return <header className="citizen-header"><div className="citizen-header-inner">
     <Link to="/home" className="citizen-brand-lockup" aria-label="دور المي، الصفحة الرئيسية">
       <img className="citizen-council-logo" src="/images/talfit-council-logo.jpg" alt="شعار مجلس قروي تلفيت" width="58" height="58" />
       <Brand compact />
     </Link>
     <div className="citizen-header-actions">
-      <button className="citizen-icon-button citizen-bell" type="button" onClick={() => onFeature('notifications')} aria-label="الإشعارات"><Bell size={21} /></button>
+      <button className="citizen-icon-button citizen-bell" type="button" onClick={() => navigate('/notifications')} aria-label="الإشعارات"><Bell size={21} />{unreadCount > 0 && <span className="inbox-bell-badge" aria-label={`${unreadCount} إشعارات غير مقروءة`}>{unreadCount > 99 ? '99+' : unreadCount}</span>}</button>
       <button className="citizen-logout" type="button" onClick={onLogout} disabled={signingOut} aria-label="تسجيل الخروج"><LogOut size={18} /><span>{signingOut ? 'جارٍ الخروج…' : 'تسجيل الخروج'}</span></button>
     </div>
   </div></header>;

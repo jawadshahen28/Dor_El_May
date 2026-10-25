@@ -6,12 +6,20 @@ const auditSchema = new mongoose.Schema({
   at: { type: Date, required: true },
   by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { _id: false });
-// Durable event intents only. No dispatcher or outbound push is enabled.
+const inboxSchema = new mongoose.Schema({
+  version: { type: Number, required: true, enum: [1] },
+  zoneName: { type: String, required: true, maxlength: 100 },
+  scheduledDate: { type: String, required: true, validate: isCalendarDate },
+  cursor: { type: mongoose.Schema.Types.ObjectId, default: null },
+  done: { type: Boolean, default: false },
+}, { _id: false });
+// Existing push identifiers are unchanged. Only new transitions opt into inbox fan-out.
 const notificationEventSchema = new mongoose.Schema({
   key: { type: String, required: true },
   type: { type: String, enum: ['schedule_published', 'pumping_started'], required: true },
   zoneId: { type: mongoose.Schema.Types.ObjectId, ref: 'Zone', required: true },
   occurredAt: { type: Date, required: true },
+  inbox: { type: inboxSchema, default: undefined },
 }, { _id: false });
 
 // Calendar date and optional wall-clock time in Asia/Hebron. Actual events use UTC instants.
@@ -43,5 +51,6 @@ waterRoundSchema.index({ updatedAt: -1, publishedAt: 1 });
 waterRoundSchema.index({ scheduledDate: 1, scheduledTime: 1, _id: 1 });
 waterRoundSchema.index({ creationKey: 1 }, { unique: true, partialFilterExpression: { creationKey: { $type: 'string' } } });
 waterRoundSchema.index({ 'notificationEvents.occurredAt': 1 });
+waterRoundSchema.index({ 'notificationEvents.inbox.version': 1, 'notificationEvents.inbox.done': 1 });
 
 export const WaterRound = mongoose.model('WaterRound', waterRoundSchema);

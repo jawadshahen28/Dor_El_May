@@ -9,9 +9,10 @@ const specs = readdirSync(new URL('../tests/', import.meta.url), { recursive: tr
   .filter((path) => /\.spec\.[cm]?[jt]sx?$/.test(path)).map((path) => 'tests/' + path.replaceAll('\\', '/')).sort();
 const council = specs.filter((path) => path === 'tests/council-water.spec.js');
 const notifications = specs.filter((path) => path === 'tests/notifications.spec.js');
+const inbox = specs.filter((path) => path === 'tests/inbox.spec.js');
 // Each invocation gets its own disposable database/session/rate-limit store.
 // Keep the real production limits intact as the workflow test suite grows.
-const groups = argumentsFromUser.length ? [argumentsFromUser] : [specs.filter((path) => !council.includes(path) && !notifications.includes(path)), council, notifications];
+const groups = argumentsFromUser.length ? [argumentsFromUser] : [...specs.filter((path) => !council.includes(path) && !notifications.includes(path) && !inbox.includes(path)).map((path) => [path]), council, notifications, inbox];
 for (const group of groups.filter((items) => items.length)) {
   const child = spawn(process.execPath, [cli, 'test', ...group], { cwd: root, stdio: 'inherit', env: { ...process.env, PUSH_UI_TESTING: group.some((argument) => argument.includes('notifications.spec')) ? '1' : '0' } });
   const terminate = () => child.kill('SIGTERM');

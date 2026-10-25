@@ -5,6 +5,7 @@ import { WaterRound } from '../models/WaterRound.js';
 import { Zone } from '../models/Zone.js';
 import { ApiError } from '../utils/response.js';
 import { publishedRoundsFilter } from './waterRoundRead.js';
+import { persistEventInbox } from './notificationInbox.js';
 
 const pageSize = 50;
 const invalid = (message = 'يرجى التحقق من بيانات الدور.', fields) => { throw new ApiError(422, 'VALIDATION_ERROR', message, fields); };
@@ -25,7 +26,9 @@ function scheduleValues(body) {
   return { zoneId: body.zoneId.toLowerCase(), scheduledDate: body.scheduledDate, scheduledTime };
 }
 async function activeZone(id) {
-  if (!await Zone.exists({ _id: id, isActive: true })) invalid('الحارة غير متاحة. اختر حارة نشطة من القائمة.', { zoneId: 'اختر حارة نشطة موجودة.' });
+  const zone = await Zone.findOne({ _id: id, isActive: true }).select('name').lean();
+  if (!zone) invalid('الحارة غير متاحة. اختر حارة نشطة من القائمة.', { zoneId: 'اختر حارة نشطة موجودة.' });
+  return zone;
 }
 function adminDto(round) {
   return {
@@ -125,16 +128,18 @@ export async function changeCouncilRound(admin, id, action, body, { now = new Da
     changes = values; auditAction = 'edited';
   } else if (action === 'publish') {
     if (current.status !== 'scheduled' || current.publishedAt || current.actualStartedAt || current.actualEndedAt) conflict();
-    await activeZone(current.zoneId);
+    const zone = await activeZone(current.zoneId);
     Object.assign(filter, { status: 'scheduled', publishedAt: null, actualStartedAt: null, actualEndedAt: null });
     changes = { publishedAt: now, publishedBy: admin._id }; auditAction = 'published';
-    event = { key: `water-round:${id.toLowerCase()}:schedule_published`, type: 'schedule_published', zoneId: current.zoneId, occurredAt: now };
+    event = { key: `water-round:${id.toLowerCase()}:schedule_published`, type: 'schedule_published', zoneId: current.zoneId, occurredAt: now,
+      inbox: { version: 1, zoneName: zone.name, scheduledDate: current.scheduledDate } };
   } else if (action === 'start') {
     if (current.status !== 'scheduled' || !current.publishedAt || current.publishedAt > now || current.actualStartedAt || current.actualEndedAt) conflict();
-    await activeZone(current.zoneId);
+    const zone = await activeZone(current.zoneId);
     Object.assign(filter, { ...publishedRoundsFilter(now), status: 'scheduled', actualStartedAt: null, actualEndedAt: null });
     changes = { status: 'pumping', actualStartedAt: now, actualStartedBy: admin._id }; auditAction = 'pumping_started';
-    event = { key: `water-round:${id.toLowerCase()}:pumping_started`, type: 'pumping_started', zoneId: current.zoneId, occurredAt: now };
+    event = { key: `water-round:${id.toLowerCase()}:pumping_started`, type: 'pumping_started', zoneId: current.zoneId, occurredAt: now,
+      inbox: { version: 1, zoneName: zone.name, scheduledDate: current.scheduledDate } };
   } else if (action === 'end') {
     if (current.status !== 'pumping' || current.actualEndedAt) conflict();
     Object.assign(filter, { status: 'pumping', actualEndedAt: null });
@@ -150,5 +155,9 @@ export async function changeCouncilRound(admin, id, action, body, { now = new Da
     $push: { audit: { action: auditAction, at: now, by: admin._id }, ...(event ? { notificationEvents: event } : {}) },
   }, { new: true, runValidators: true });
   if (!result) conflict();
+  if (event) {
+    try { await persistEventInbox(result._id, event.key); }
+    catch { console.error('Inbox fan-out pending; durable event retained for retry.'); }
+  }
   return { round: await responseRound(id) };
 }

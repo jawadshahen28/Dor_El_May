@@ -61,8 +61,8 @@ test('citizen home uses the real summary API, displays honest empty states, and 
   await expect(page.getByRole('heading', { name: 'البلاغات', exact: true })).toBeVisible();
   await page.getByRole('navigation', { name: 'التنقل الرئيسي' }).getByRole('button', { name: 'الرئيسية', exact: true }).click();
   await page.getByRole('button', { name: 'الإشعارات', exact: true }).click();
-  await expect(page.getByRole('dialog').getByText(/خدمة الإشعارات غير مهيأة على الخادم/)).toBeVisible();
-  await page.getByRole('button', { name: 'إغلاق', exact: true }).click();
+  await expect(page).toHaveURL(/\/notifications$/);
+  await expect(page.getByText('كل أخبار المياه… ستجدها هنا', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'حسابي', exact: true }).click();
   await expect(page).toHaveURL(/\/account$/);
   await expect(page.locator('.account-fields').getByText('مواطن اختبار', { exact: true })).toBeVisible();

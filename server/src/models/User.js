@@ -13,4 +13,5 @@ const userSchema = new mongoose.Schema({
   status: { type: String, enum: ['active', 'disabled'], default: 'active' },
 }, { timestamps: true, toJSON: { transform(_doc, ret) { delete ret.passwordHash; delete ret.__v; return ret; } } });
 
+userSchema.index({ zoneId: 1, _id: 1 });
 export const User = mongoose.model('User', userSchema);
