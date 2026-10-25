@@ -15,7 +15,7 @@ async function citizen(page, phone) {
 }
 const navigation = (page) => page.getByRole('navigation', { name: 'التنقل الرئيسي' });
 const filters = (page) => page.getByRole('group', { name: 'تصفية حسب الحارة' });
-const emptySchedule = (month, zone = 'all') => ({ month, zone, status: null, rounds: [], pagination: { page: 1, pageSize: 50, total: 0, hasMore: false }, generatedAt: frozen, timeZone: 'Asia/Hebron' });
+const emptySchedule = (month, zone = 'mine') => ({ month, zone, status: null, activeRounds: [], rounds: [], pagination: { page: 1, pageSize: 50, total: 0, hasMore: false }, generatedAt: frozen, timeZone: 'Asia/Hebron' });
 
 test('schedule is protected, all Home entries navigate correctly, and real empty data fits every viewport', async ({ page }) => {
   expect((await page.request.get('/api/water-rounds')).status()).toBe(401);
@@ -65,69 +65,69 @@ test('schedule is protected, all Home entries navigate correctly, and real empty
   await expect(page.getByRole('heading', { name: 'لا توجد أدوار مياه معلنة لهذه الفترة', exact: true })).toBeVisible();
 });
 
-test('published display fixtures cover all statuses, own-zone highlights, month and zone filters, and pagination', async ({ page }) => {
-  // These are isolated browser display fixtures, never official MongoDB records.
+test('separate current/upcoming sections default to my neighborhood, retain pumping across months, and paginate only scheduled rows', async ({ page }) => {
   const { zones } = await citizen(page, '0594522222');
   await page.clock.setFixedTime(new Date(frozen));
-  const fixture = (id, zone, status, date, time = '09:00') => ({ id, zone, status, scheduledDate: date, scheduledTime: time, actualStartedAt: status === 'pumping' ? '2026-01-31T23:00:00Z' : null });
-  const rows = [
-    fixture('pumping', zones[1], 'pumping', '2026-02-01'),
-    fixture('own', zones[0], 'scheduled', '2026-02-03'),
-    fixture('completed', zones[2], 'completed', '2026-02-04'),
-    fixture('cancelled', zones[3], 'cancelled', '2026-02-05'),
-    fixture('unknown-time', zones[0], 'scheduled', '2026-02-06', null),
-    fixture('sixth', zones[4], 'scheduled', '2026-02-07'),
-  ];
+  const fixture = (id, zone, status, date, time = '09:00') => ({ id, zone, status, scheduledDate: date, scheduledTime: time,
+    actualStartedAt: status === 'pumping' ? '2026-01-31T22:00:00Z' : null });
+  const active = [fixture('own-active', zones[0], 'pumping', '2025-12-31'), fixture('other-active', zones[1], 'pumping', '2026-01-01')];
+  const rows = [fixture('own-today', zones[0], 'scheduled', '2026-02-01'), fixture('own-tomorrow', zones[0], 'scheduled', '2026-02-02', null),
+    fixture('other-upcoming', zones[1], 'scheduled', '2026-02-03'), fixture('fourth', zones[4], 'scheduled', '2026-02-07')];
   const queries = [];
   await page.route('**/api/water-rounds?*', (route) => {
-    const query = new URL(route.request().url()).searchParams;
-    queries.push(Object.fromEntries(query));
+    const query = new URL(route.request().url()).searchParams; queries.push(Object.fromEntries(query));
     const month = query.get('month'), zone = query.get('zone'), pageNumber = Number(query.get('page'));
-    let selected = month === '2026-02' ? rows : [];
-    if (zone !== 'all') selected = selected.filter((row) => row.zone.id === (zone === 'mine' ? zones[0].id : zone));
-    const extra = pageNumber === 2 ? [fixture('extra', zones[4], 'scheduled', '2026-02-08')] : selected;
-    const data = { ...emptySchedule(month, zone), rounds: extra, pagination: { page: pageNumber, pageSize: 6, total: zone === 'all' && month === '2026-02' ? 7 : selected.length, hasMore: pageNumber === 1 && zone === 'all' && month === '2026-02' } };
-    return route.fulfill({ json: { success: true, data } });
+    const matches = (row) => zone === 'all' || row.zone.id === (zone === 'mine' ? zones[0].id : zone);
+    const selected = month === '2026-02' ? rows.filter(matches) : [];
+    const more = zone === 'all' && month === '2026-02';
+    return route.fulfill({ json: { success: true, data: { ...emptySchedule(month, zone), activeRounds: active.filter(matches),
+      rounds: pageNumber === 2 ? [fixture('extra', zones[4], 'scheduled', '2026-02-08')] : selected,
+      pagination: { page: pageNumber, pageSize: 4, total: more ? 5 : selected.length, hasMore: more && pageNumber === 1 } } } });
   });
-  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/schedule');
-  await expect(page.locator('.schedule-month-navigation time')).toHaveAttribute('datetime', '2026-02');
-  await expect(page.locator('.schedule-row')).toHaveCount(6);
-  for (const status of ['مجدول', 'الضخ جارٍ', 'مكتمل', 'ملغي']) await expect(page.getByText(status, { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('الساعة غير محددة', { exact: true })).toBeVisible();
-  await expect(page.locator('.schedule-actual-start')).toContainText('بدأ الضخ فعليًا:');
-  await expect(page.locator('.schedule-actual-start')).toContainText('1:00');
-  await expect(page.locator('.schedule-row--mine')).toHaveCount(2);
-  await expect(page.locator('.schedule-row--mine').first()).toContainText(zones[0].name);
-  const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  for (const width of [320, 360, 390, 430, 1440]) {
-    await page.setViewportSize({ width, height: width === 1440 ? 1000 : 844 });
-    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.screenshot({ path: `artifacts/screenshots/water-schedule-test-data-${width}.png`, fullPage: true });
-    if (width === 390) await page.screenshot({ path: 'artifacts/screenshots/water-schedule-reference-390.png' });
-  }
-  await page.getByRole('button', { name: 'عرض المزيد من الأدوار', exact: true }).click();
-  await expect(page.locator('.schedule-row')).toHaveCount(7);
-  await expect(page.getByRole('button', { name: 'عرض المزيد من الأدوار', exact: true })).not.toBeVisible();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-  const lastRow = await page.locator('.schedule-row').last().boundingBox();
-  const nav = await navigation(page).boundingBox();
-  expect(lastRow.y + lastRow.height).toBeLessThan(nav.y);
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await filters(page).getByRole('button', { name: 'حارتي', exact: true }).click();
-  await expect(page.locator('.schedule-row')).toHaveCount(2);
   await expect(filters(page).getByRole('button', { name: 'حارتي', exact: true })).toHaveAttribute('aria-pressed', 'true');
   expect(queries.at(-1).zone).toBe('mine');
-  await filters(page).getByRole('button', { name: zones[1].name, exact: true }).click();
+  await expect(page.locator('.schedule-month-navigation time')).toHaveAttribute('datetime', '2026-02');
+  await expect(page.getByRole('heading', { name: 'الضخ الجاري الآن', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'الأدوار القادمة', exact: true })).toBeVisible();
+  await expect(page.locator('.schedule-pumping-card')).toHaveCount(1);
+  await expect(page.locator('.schedule-row')).toHaveCount(2);
+  await expect(page.locator('.schedule-row--mine')).toHaveCount(2);
+  await expect(page.getByText('اليوم', { exact: true })).toBeVisible();
+  await expect(page.getByText('غدًا', { exact: true })).toBeVisible();
+  await expect(page.getByText('الساعة غير محددة', { exact: true })).toBeVisible();
+  await expect(page.locator('.schedule-actual-start time')).toHaveAttribute('datetime', '2026-01-31T22:00:00Z');
+  await expect(page.locator('.schedule-row').getByText('الضخ جارٍ الآن', { exact: true })).toHaveCount(0);
+  for (const text of ['مكتمل', 'ملغي', 'ملغى', 'مسودة']) await expect(page.getByText(text, { exact: true })).toHaveCount(0);
+  await mkdir('artifacts/screenshots', { recursive: true });
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: width === 1440 || width === 390 ? 1000 : 844 });
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: 'artifacts/screenshots/citizen-schedule-' + width + '.png', fullPage: true });
+  }
+  await filters(page).getByRole('button', { name: 'كل الحارات', exact: true }).click();
+  await expect(page.locator('.schedule-pumping-card')).toHaveCount(2);
+  await expect(page.locator('.schedule-row')).toHaveCount(4);
+  await expect(page.locator('.schedule-row h3')).toHaveText(rows.map((row) => row.zone.name));
+  await page.getByRole('button', { name: 'عرض المزيد من الأدوار', exact: true }).click();
+  await expect(page.locator('.schedule-row')).toHaveCount(5);
+  await expect(page.locator('.schedule-pumping-card')).toHaveCount(2);
+  await expect(page.getByRole('button', { name: 'عرض المزيد من الأدوار', exact: true })).toHaveCount(0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const lastRow = await page.locator('.schedule-row').last().boundingBox(), nav = await navigation(page).boundingBox();
+  expect(lastRow.y + lastRow.height).toBeLessThan(nav.y);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.getByRole('combobox', { name: 'حارة محددة', exact: true }).selectOption(zones[1].id);
   await expect(page.locator('.schedule-row')).toHaveCount(1);
+  await expect(page.locator('.schedule-pumping-card')).toHaveCount(1);
   await expect(page.locator('.schedule-row--mine')).toHaveCount(0);
   expect(queries.at(-1).zone).toBe(zones[1].id);
   await page.getByRole('button', { name: 'الشهر السابق', exact: true }).click();
   await expect(page.getByText('لا توجد أدوار مياه معلنة لهذه الفترة', { exact: true })).toBeVisible();
+  await expect(page.locator('.schedule-pumping-card')).toHaveCount(1);
   expect(queries.at(-1).month).toBe('2026-01');
-  expect(queries.at(-1).zone).toBe(zones[1].id);
   await page.getByRole('button', { name: 'الشهر السابق', exact: true }).click();
   await expect(page.locator('.schedule-month-navigation time')).toHaveAttribute('datetime', '2025-12');
   await page.getByRole('button', { name: 'الشهر التالي', exact: true }).click();
@@ -180,7 +180,7 @@ test('delayed month responses cannot overwrite a newer filter, and zone list err
   await page.goto('/schedule');
   await expect(page.getByText(/تعذّر تحميل قائمة الحارات/)).toBeVisible();
   await page.getByRole('button', { name: 'إعادة المحاولة', exact: true }).click();
-  await expect(filters(page).getByRole('button')).toHaveCount(7);
+  await expect(filters(page).getByRole('button')).toHaveCount(2); await expect(page.getByRole('combobox', { name: 'حارة محددة' }).getByRole('option')).toHaveCount(6);
   await page.getByRole('button', { name: 'الشهر التالي', exact: true }).click();
   await expect.poll(() => delayed).toBe(true);
   await page.getByRole('button', { name: 'الشهر التالي', exact: true }).click();

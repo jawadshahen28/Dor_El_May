@@ -121,7 +121,11 @@ for (const size of [{ label: 'desktop', width: 1440, height: 1000 }, { label: 'm
       await expect(page.getByRole('region', { name: 'سجل الأدوار الأخيرة' }).getByText(zones[0].name, { exact: true }).first()).toBeVisible();
       await reader.getByRole('button', { name: 'تحديث المعلومات', exact: true }).click();
       await expect(reader.getByText('لا يوجد ضخ معلن حاليًا', { exact: true })).toBeVisible();
-      await reader.goto('/schedule'); await expect(reader.locator('.schedule-row').filter({ hasText: zones[0].name }).last()).toContainText('مكتمل');
+      await reader.goto('/schedule');
+      await expect(reader.locator('.schedule-row').filter({ hasText: zones[0].name })).toHaveCount(0);
+      await expect(reader.locator('.schedule-pumping-card').filter({ hasText: zones[0].name })).toHaveCount(0);
+      const retained = (await (await page.request.get('/api/admin/water-rounds?month=' + month)).json()).data.rounds.find((item) => item.id === round.id);
+      expect(retained.status).toBe('completed');
       expect(errors).toEqual([]);
     } finally { await cleanup(page.request, ids); await readerContext.close(); }
   });

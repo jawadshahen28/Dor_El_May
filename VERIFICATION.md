@@ -2,6 +2,15 @@
 
 نُفّذت الأوامر داخل مجلد المشروع على Windows باستخدام Node.js 24.12.0 وnpm 11.6.2.
 
+## Citizen schedule clarity update
+
+- `/schedule` now separates **الضخ الجاري الآن** from **الأدوار القادمة**, defaults to **حارتي**, retains **كل الحارات** and a compact actual-neighborhood dropdown, and keeps Palestine month navigation within the upcoming section. Current pumping has its own blue status card; scheduled cards remain white with accurate dates and optional clock times.
+- The existing citizen API excludes completed/cancelled/draft/unpublished-future rows in MongoDB. `activeRounds` is independent of planned month/date; `rounds` and pagination cover upcoming scheduled records in the chosen month. Elapsed known clocks on the current Palestine day are excluded using the homepage's existing helper; unknown times remain explicit. No statuses/data/models/indexes or admin history queries are changed.
+- `npm test`: **40 passed**. `npm run test:db`: **95 passed**, including the new older-planned-date pumping case, own/all-zone targeting, completed/cancelled exclusion, safe filters, chronological pagination, leap/year boundaries and complete council history. Existing push/inbox/session tests passed without real transports or Atlas access.
+- Production build and `npm run test:production`: **5 passed**, covering route refresh, API/static boundaries, proxy-aware secure sessions, restart persistence and database recovery. The final `node scripts/run-browser-tests.mjs` passed **47 browser tests** across citizen/admin pages, the revised schedule, council workflows, PWA, device push and persistent inbox. Total: **187 passing tests**.
+- Screenshots use isolated display fixtures only and remain ignored: `artifacts/screenshots/citizen-schedule-390.png` and `citizen-schedule-1440.png`, plus 320px/768px checks and empty-state cases. Layouts were visually reviewed, including distinct current/scheduled styling, readable controls and preserved navigation safe areas.
+- Protected hashes confirm local `.env`/push keys, authentication/configuration, council transition logic, homepage summary, Web Push/Cron/inbox processing, service worker and package manifests/lockfile are unchanged. No live notifications, water transitions, seed operations or Render changes were triggered. API contract: [WATER_SCHEDULE.md](WATER_SCHEDULE.md).
+
 ## Persistent in-app notification center
 
 - Added `/notifications`, MongoDB history, server-owned unread/read state, cursor pagination and a badge refreshed on visible revisits and once per minute. Permission-denied citizens keep full inbox access; device activation reuses the existing explicit-click subscription flow. The obsolete experimental sending message is removed.

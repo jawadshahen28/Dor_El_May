@@ -186,8 +186,9 @@ test('multiple zones pump independently; completing one changes Home and preserv
   const record = await stored(first.id); assert.equal(String(record.actualEndedBy), String(admin._id)); assert.equal(record.notificationEvents.length, 2);
   home = (await resident.agent.get('/api/home/summary')).body.data;
   assert.deepEqual(home.activeRounds.map((round) => round.id), [second.id]); privateMetadataAbsent(home.activeRounds);
-  const schedule = (await resident.agent.get('/api/water-rounds?month=' + month)).body.data;
-  assert.equal(schedule.rounds.find((round) => round.id === first.id).status, 'completed');
+  const schedule = (await resident.agent.get('/api/water-rounds?month=' + month + '&zone=all')).body.data;
+  assert.equal(schedule.rounds.some((round) => round.id === first.id), false);
+  assert.deepEqual(schedule.activeRounds.map((round) => round.id), [second.id]);
   const water = (await signed.agent.get('/api/admin/water')).body.data;
   assert.equal(water.activeRounds.length, 1); assert.equal(water.history[0].id, first.id);
   await change(ended, 'end', 409); await change(ended, 'start', 409);
@@ -201,7 +202,9 @@ test('each citizen next-round query uses their registered zone, including refres
   const cancelled = (await change(first, 'cancel')).body.data.round;
   assert.equal(cancelled.status, 'cancelled'); assert.ok(cancelled.cancelledAt);
   assert.equal((await resident.agent.get('/api/home/summary')).body.data.myNextRound, null);
-  assert.equal((await resident.agent.get('/api/water-rounds?month=' + month + '&zone=mine')).body.data.rounds[0].status, 'cancelled');
+  assert.deepEqual((await resident.agent.get('/api/water-rounds?month=' + month + '&zone=mine')).body.data.rounds, []);
+  const history = (await signed.agent.get('/api/admin/water-rounds?month=' + month)).body.data.rounds;
+  assert.equal(history.find((round) => round.id === first.id).status, 'cancelled');
   await change(cancelled, 'publish', 409); await change(cancelled, 'start', 409); await change(cancelled, 'cancel', 409);
   assert.equal((await stored(first.id)).notificationEvents.length, 1);
 });
