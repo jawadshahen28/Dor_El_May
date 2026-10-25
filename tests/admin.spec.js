@@ -70,7 +70,7 @@ test('real admin dashboard, responsive sidebar/drawer, persistent session, and s
   await expect(menu).toHaveAttribute('aria-expanded', 'true');
   await expect(dialog.getByRole('link', { name: 'الرئيسية' })).toHaveAttribute('aria-current', 'page');
   const placeholders = dialog.getByRole('navigation').getByRole('button');
-  await expect(placeholders).toHaveCount(6);
+  await expect(placeholders).toHaveCount(4);
   for (const item of await placeholders.all()) { await expect(item).toBeDisabled(); await expect(item).toContainText('قريبًا'); }
   await page.screenshot({ path: 'artifacts/screenshots/admin-drawer-mobile.png' });
   await page.keyboard.press('Tab');

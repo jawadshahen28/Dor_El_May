@@ -30,6 +30,11 @@ await User.insertMany(['0594811111', '0594822222', '0594833333', '0594844444'].m
 })));
 // Admin fixture exists only in this explicitly invoked, disposable test server.
 await User.create({ fullName: 'مسؤول اختبار المجلس', phone: '0594911111', passwordHash: await hashPassword('AdminBrowserPass9!'), role: 'admin', status: 'active' });
+const councilPasswordHash = await hashPassword('CouncilBrowser9!');
+await User.insertMany([
+  { fullName: 'مسؤول اختبار إدارة المياه', phone: '0594933333', passwordHash: councilPasswordHash, role: 'admin' },
+  { fullName: 'مواطن اختبار إدارة المياه', phone: '0594944444', passwordHash: councilPasswordHash, zoneId: zones[0]._id },
+]);
 // PWA privacy fixtures are confined to this explicitly invoked temporary database.
 const pwaPasswordHash = await hashPassword('PwaBrowserPass9!');
 await User.insertMany([

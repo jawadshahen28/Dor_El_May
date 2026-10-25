@@ -76,7 +76,7 @@ after(async () => { await stop(); await mongoose.disconnect(); await mongo?.stop
 test('real production startup uses PORT and 0.0.0.0, serves SPA refresh routes/assets, and never replaces APIs with HTML', async () => {
   assert.ok(output.includes(`API: http://0.0.0.0:${port}`));
   const html = readFileSync(new URL('../../../client/dist/index.html', import.meta.url), 'utf8');
-  for (const path of ['/', '/home', '/schedule', '/announcements', '/announcements/100000000000000000000001', '/reports', '/account', '/admin', '/admin/login']) {
+  for (const path of ['/', '/home', '/schedule', '/announcements', '/announcements/100000000000000000000001', '/reports', '/account', '/admin', '/admin/login', '/admin/water', '/admin/schedule']) {
     const response = await get(path).set('Accept', 'text/html').expect(200);
     assert.equal(response.text, html);
     assert.equal(response.headers['cache-control'], 'no-cache');
@@ -100,12 +100,14 @@ test('real production startup uses PORT and 0.0.0.0, serves SPA refresh routes/a
 
 test('citizen/admin auth, authorization, CSRF, Origin and secure cookies work behind the simulated HTTPS proxy', async () => {
   await get('/api/admin/dashboard').expect(401);
+  for (const path of ['/api/admin/water', '/api/admin/water-rounds']) await get(path).expect(401);
   const resident = await login(citizen, '/api/auth/login');
   const header = resident.response.headers['set-cookie'][0];
   for (const pattern of [/^__Host-door\.sid=/, /; Secure/, /; HttpOnly/, /; SameSite=Lax/, /; Path=\//]) assert.match(header, pattern);
   assert.doesNotMatch(header, /Domain=/);
   for (const path of ['/api/home/summary', '/api/water-rounds', '/api/announcements', '/api/reports/mine']) await get(path, resident.cookie).expect(200);
   await get('/api/admin/dashboard', resident.cookie).expect(403);
+  for (const path of ['/api/admin/water', '/api/admin/water-rounds']) await get(path, resident.cookie).expect(403);
   await post('/api/auth/logout', resident.cookie, '0'.repeat(64)).expect(403);
   await api().post('/api/auth/logout').set('X-Forwarded-Proto', 'https').set('Origin', 'https://attacker.example').set('Cookie', resident.cookie).set('X-CSRF-Token', resident.csrf).send({}).expect(403);
   const council = await login(admin, '/api/admin/login');

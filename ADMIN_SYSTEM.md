@@ -56,9 +56,9 @@ Actual event timestamps display in `Asia/Hebron`; scheduled dates/times retain t
 
 ## Layout and future scope
 
-The separate RTL administrative shell has a persistent right sidebar on desktop, Council header, five statistics cards, pumping status, upcoming rounds, recent report summaries, and data-read timestamps. Below 1100px, a native modal drawer supplies focus trapping, Escape dismissal, focus restoration, and mobile navigation. Management buttons are disabled and labeled `قريبًا`; there are no broken management links.
+The separate RTL administrative shell has a persistent right sidebar on desktop, Council header, five statistics cards, pumping status, upcoming rounds, recent report summaries, and data-read timestamps. Below 1100px, a native modal drawer supplies focus trapping, Escape dismissal, focus restoration, and mobile navigation. Water and schedule links are functional; the four other future sections remain disabled and labeled `قريبًا`.
 
-Starting/stopping pumping, schedule writes, report status updates, announcement publishing, citizen management, profile editing, password resets, notifications, staff permissions, and Council settings remain postponed. There are no admin domain write endpoints.
+Water management is now implemented in [COUNCIL_WATER_MANAGEMENT.md](COUNCIL_WATER_MANAGEMENT.md), using `/admin/water` and `/admin/schedule`, revision-checked write APIs, server-side actor/time auditing, and private drafts. The dashboard shares the unchanged shell and its original visual design. Report status updates, announcement publishing, citizen management, profile editing, password resets, outbound notifications, staff permissions and Council settings remain future work. See [NOTIFICATION_READINESS.md](NOTIFICATION_READINESS.md) for the exact push status and implementation plan.
 
 ## Files
 

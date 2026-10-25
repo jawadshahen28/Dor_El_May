@@ -23,7 +23,7 @@ npm run dev -- --host 0.0.0.0
 - صفحة حساب للعرض فقط، مع الاسم والهاتف والحارة وتاريخ الانضمام وتسجيل الخروج.
 - عرض أولي skeleton، وإعادة المحاولة، وتحديث يدوي، وتحديث عند الرجوع إلى الصفحة أو التركيز عليها. إذا فشل تحديث لاحق تبقى البيانات السابقة مع تنبيه واضح؛ لا يُعرض فشل الاتصال كأنه لا يوجد ضخ.
 
-يتصل الجدول الكامل الآن بصفحة `/schedule` كما يوضح [WATER_SCHEDULE.md](WATER_SCHEDULE.md)، والإعلانات بالقائمة والتفاصيل كما يوضح [COUNCIL_ANNOUNCEMENTS.md](COUNCIL_ANNOUNCEMENTS.md). يفتح اختصار «تقديم شكوى» البلاغات الخاصة، ويفتح «حسابي» صفحة الحساب كما يوضح [CITIZEN_REPORTS_ACCOUNT.md](CITIZEN_REPORTS_ACCOUNT.md). تبقى الإشعارات حالة «قريبًا»، دون شارات وهمية أو لوحة إدارة أو push notifications.
+يتصل الجدول الكامل الآن بصفحة `/schedule` كما يوضح [WATER_SCHEDULE.md](WATER_SCHEDULE.md)، والإعلانات بالقائمة والتفاصيل كما يوضح [COUNCIL_ANNOUNCEMENTS.md](COUNCIL_ANNOUNCEMENTS.md). يفتح اختصار «تقديم شكوى» البلاغات الخاصة، ويفتح «حسابي» صفحة الحساب كما يوضح [CITIZEN_REPORTS_ACCOUNT.md](CITIZEN_REPORTS_ACCOUNT.md). إدارة المجلس للأدوار والضخ موثقة في [COUNCIL_WATER_MANAGEMENT.md](COUNCIL_WATER_MANAGEMENT.md)؛ الرئيسية تقرأ تغييراتها عند التحديث من قاعدة البيانات نفسها. تبقى الإشعارات حالة «قريبًا»، دون شارات وهمية أو إرسال push notifications.
 
 ## API الجديد
 

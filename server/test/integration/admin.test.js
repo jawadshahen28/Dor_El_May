@@ -228,7 +228,7 @@ test('explicit local creation validates, hashes, rejects duplicates, and never p
   }
 });
 
-test('normal startup never creates an admin; public registration and all domain writes remain unavailable', async () => {
+test('normal startup never creates an admin; public elevation and future management routes remain unavailable', async () => {
   await User.deleteOne({ _id: admin._id });
   createApp({ config, store, limits: await createRateLimits(mongoose.connection), isDatabaseAvailable: databaseAvailable });
   assert.equal(await User.countDocuments({ role: 'admin' }), 0);
@@ -238,7 +238,8 @@ test('normal startup never creates an admin; public registration and all domain 
   await agent.get('/api/admin/dashboard').expect(403);
   await User.create({ fullName: 'مسؤول اختبار آخر', phone: admin.phone, passwordHash, role: 'admin' });
   const signed = await signIn();
-  for (const path of ['register', 'dashboard', 'pumping', 'water-rounds', 'announcements', 'reports', 'users', 'settings']) {
+  await post(signed.agent, 'admin/water-rounds', signed.token, {}).expect(422);
+  for (const path of ['register', 'dashboard', 'pumping', 'announcements', 'reports', 'users', 'settings']) {
     await post(signed.agent, `admin/${path}`, signed.token, {}).expect(404);
   }
 });

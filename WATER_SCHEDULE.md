@@ -48,6 +48,6 @@ npm run dev -- --host 0.0.0.0
 - `server/test/integration/schedule.test.js` و`tests/schedule.spec.js` و`tests/home.spec.js`: التحقق من API والواجهة والتنقل.
 - `README.md` و`HOME_DASHBOARD.md` و`VERIFICATION.md` وهذا الملف: تحديث وصف الخدمات وخطوات الاستخدام ونتائج الفحص.
 
-لوحة المجلس وإضافة الأدوار وتعديلها وحذفها، وpush notifications وتحرير الحساب مؤجلة. أُضيفت قائمة الإعلانات وتفاصيلها كما يوضح [COUNCIL_ANNOUNCEMENTS.md](COUNCIL_ANNOUNCEMENTS.md)، والبلاغات الخاصة وصفحة الحساب كما يوضح [CITIZEN_REPORTS_ACCOUNT.md](CITIZEN_REPORTS_ACCOUNT.md)، دون تغيير تصميم الجدول.
+إدارة المجلس للأدوار والضخ متاحة الآن كما يوضح [COUNCIL_WATER_MANAGEMENT.md](COUNCIL_WATER_MANAGEMENT.md): المسودات خاصة، والنشر وبدء الضخ وإنهاؤه وتعديل المواعيد والإلغاء تغيّر قاعدة البيانات نفسها دون تغيير تصميم جدول المواطن. لا يوجد حذف نهائي للأدوار أو إرسال إشعارات دفع. خطة الإشعارات في [NOTIFICATION_READINESS.md](NOTIFICATION_READINESS.md). أُضيفت قائمة الإعلانات وتفاصيلها كما يوضح [COUNCIL_ANNOUNCEMENTS.md](COUNCIL_ANNOUNCEMENTS.md)، والبلاغات الخاصة وصفحة الحساب كما يوضح [CITIZEN_REPORTS_ACCOUNT.md](CITIZEN_REPORTS_ACCOUNT.md).
 
 نتائج الفحص واللقطات موثقة في `VERIFICATION.md`. بيانات اختبارات المتصفح المعبأة مخصصة للعرض المعزول فقط؛ لا تمثل سجلات المجلس ولا تُضاف إلى Atlas.

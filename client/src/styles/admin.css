@@ -1,5 +1,47 @@
 .admin-app, .admin-login { --admin-blue: #1468c4; --admin-ink: #18344f; --admin-muted: #6c8095; color: var(--admin-ink); background: #f4f7fb; min-height: 100svh; }
 .admin-app button, .admin-app a, .admin-login button { -webkit-tap-highlight-color: transparent; }
+.council-form-panel, .council-rounds-panel { margin-bottom: 22px; }
+.council-form { padding: 22px; }
+.council-form fieldset { min-width: 0; border: 0; padding: 0; margin: 0; }
+.council-form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.council-form .form-field { background: #fff; }
+.council-form input[type="date"], .council-form input[type="time"] { min-width: 0; width: 100%; direction: ltr; text-align: right; }
+.council-help { color: #6c8095; font-size: 13px; line-height: 1.9; margin-block: 16px; }
+.council-actions { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+.council-button { border: 1px solid #dce5ef; background: #fff; color: #47637e; border-radius: 8px; padding: 10px 15px; min-height: 44px; font-size: 13px; line-height: 1.6; }
+.council-button:hover:enabled { background: #edf5fd; }
+.council-button--primary { background: #1468c4; color: #fff; border-color: #1468c4; }
+.council-button--primary:hover:enabled { background: #1059a9; }
+.council-button--danger { color: #a54b51; border-color: #edd9dc; }
+.council-button:disabled { opacity: .55; cursor: not-allowed; }
+.council-success { padding: 14px 18px; background: #eaf7f2; color: #247965; border: 1px solid #d4ece3; border-radius: 9px; line-height: 1.9; font-size: 14px; margin-bottom: 18px; }
+.council-filters { padding: 20px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; border-bottom: 1px solid #edf1f6; }
+.council-filters > div { display: flex; flex-direction: column; gap: 8px; min-width: 0; color: #637990; font-size: 13px; }
+.council-filters input, .council-filters select { min-width: 0; width: 100%; min-height: 44px; color: #18344f; background: #fff; border: 1px solid #dce5ef; border-radius: 8px; padding: 9px; font: inherit; }
+.council-rounds { list-style: none; padding: 0 22px; margin: 0; }
+.council-rounds > li { display: flex; gap: 18px; align-items: center; justify-content: space-between; border-bottom: 1px solid #edf1f6; padding: 20px 0; }
+.council-rounds > li:last-child { border-bottom: 0; }
+.council-round-detail { min-width: 0; }
+.council-round-detail h3, .council-confirm-round h3 { font-size: 16px; overflow-wrap: anywhere; }
+.council-round-detail p, .council-confirm-round p { font-size: 13px; color: #71859a; line-height: 1.9; margin-top: 6px; }
+.council-round-detail > .admin-status { margin-top: 8px; }
+.council-pagination > div { display: flex; gap: 8px; }
+.council-zone-list { list-style: none; display: flex; gap: 12px; flex-wrap: wrap; margin: 0; padding: 20px 22px; }
+.council-zone-list li { display: flex; align-items: center; gap: 7px; color: #587795; background: #f1f6fc; padding: 8px 12px; border-radius: 7px; font-size: 13px; }
+.council-empty-note { margin-inline: 22px; }
+.council-confirm { width: min(480px, calc(100vw - 32px)); max-height: calc(100svh - 32px); overflow-y: auto; border: 1px solid #dce5ef; border-radius: 14px; padding: 25px; color: #18344f; background: #fff; }
+.council-confirm::backdrop { background: #142f4c66; }
+.council-confirm h2 { font-size: 21px; margin-bottom: 18px; }
+.council-confirm-round { padding: 15px; background: #f4f8fc; border-radius: 9px; }
+.council-confirm > p { line-height: 1.9; font-size: 14px; color: #637990; margin-block: 18px; }
+@media (max-width: 767px) {
+  .council-form { padding: 18px 17px; }
+  .council-form-grid, .council-filters { grid-template-columns: minmax(0, 1fr); }
+  .council-filters { padding: 18px 17px; }
+  .council-rounds { padding-inline: 17px; }
+  .council-rounds > li { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .council-confirm { padding: 22px 18px; }
+}
 .admin-eyebrow { display: inline-flex; align-items: center; gap: 7px; color: #537896; font-size: 13px; font-weight: 500; }
 .admin-login { display: grid; grid-template-columns: 47% 53%; background: #fff; }
 .admin-login-photo { position: relative; isolation: isolate; padding: 50px; color: #fff; display: flex; flex-direction: column; min-height: 100svh; }

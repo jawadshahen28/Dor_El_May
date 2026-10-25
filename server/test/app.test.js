@@ -11,7 +11,7 @@ const app = createApp({ config, isDatabaseAvailable: () => false });
 test('server starts without a database, reports its state, and fails auth closed', async () => {
   const health = await request(app).get('/api/health').expect(200);
   assert.equal(health.body.data.database, 'unavailable');
-  for (const path of ['/api/auth/me', '/api/zones', '/api/admin/dashboard', '/api/admin/me']) {
+  for (const path of ['/api/auth/me', '/api/zones', '/api/admin/dashboard', '/api/admin/me', '/api/admin/water', '/api/admin/water-rounds']) {
     const response = await request(app).get(path).expect(503);
     assert.equal(response.body.error.code, 'SERVICE_UNAVAILABLE');
     assert.equal(response.headers['cache-control'], 'no-store');

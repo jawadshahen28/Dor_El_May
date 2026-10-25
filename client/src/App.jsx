@@ -23,7 +23,8 @@ export default function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
     const titles = { '/login': 'تسجيل الدخول', '/register': 'إنشاء حساب جديد', '/home': 'الرئيسية', '/schedule': 'جدول المياه', '/announcements': 'إعلانات المجلس', '/reports': 'البلاغات', '/account': 'حسابي', '/guest': 'تصفح كزائر' };
-    document.title = `${(pathname === '/admin/login' ? 'تسجيل دخول المجلس' : pathname.startsWith('/admin') ? 'لوحة تحكم المجلس' : titles[pathname]) || (pathname.startsWith('/announcements/') ? 'تفاصيل الإعلان' : 'دور المي')} — دور المي، تلفيت`;
+    const adminTitles = { '/admin/login': 'تسجيل دخول المجلس', '/admin/water': 'إدارة الضخ', '/admin/schedule': 'إدارة جدول المياه' };
+    document.title = `${adminTitles[pathname] || (pathname.startsWith('/admin') ? 'لوحة تحكم المجلس' : titles[pathname]) || (pathname.startsWith('/announcements/') ? 'تفاصيل الإعلان' : 'دور المي')} — دور المي، تلفيت`;
   }, [pathname]);
   if (status === 'loading') return <LoadingScreen />;
   return <Routes>
