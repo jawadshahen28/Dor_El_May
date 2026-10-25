@@ -24,6 +24,7 @@ export function createApp({ config, store, limits, isDatabaseAvailable, checkDat
     contentSecurityPolicy: { directives: {
       'default-src': ["'self'"], 'script-src': ["'self'"], 'style-src': ["'self'"],
       'img-src': ["'self'", 'data:'], 'font-src': ["'self'"], 'connect-src': ["'self'"],
+      'worker-src': ["'self'"], 'manifest-src': ["'self'"],
       'upgrade-insecure-requests': config.production ? [] : null,
     } },
   }));
@@ -58,7 +59,8 @@ export function createApp({ config, store, limits, isDatabaseAvailable, checkDat
   const clientDirectory = fileURLToPath(new URL('../../client/dist/', import.meta.url));
   if (existsSync(clientDirectory)) {
     app.use(express.static(clientDirectory, { setHeaders(res, path) {
-      if (path.endsWith('index.html')) res.set('Cache-Control', 'no-cache');
+      if (['index.html', 'offline.html', 'sw.js', 'manifest.webmanifest'].some((name) => path.endsWith(`/${name}`) || path.endsWith(`\\${name}`))) res.set('Cache-Control', 'no-cache');
+      if (path.endsWith('/sw.js') || path.endsWith('\\sw.js')) res.set('Service-Worker-Allowed', '/');
     } }));
     app.get('/{*path}', (req, res, next) => {
       // Missing assets, dotfiles and JSON requests must never receive SPA HTML.

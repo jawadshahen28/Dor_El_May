@@ -14,7 +14,7 @@ export async function api(path, { method = 'GET', body, signal, retryCsrf = true
   let response;
   try {
     response = await fetch(`/api${path}`, {
-      method, credentials: 'same-origin', signal,
+      method, credentials: 'same-origin', cache: 'no-store', signal,
       headers: { ...(mutation ? { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf } : {}), Accept: 'application/json' },
       ...(mutation ? { body: JSON.stringify(body || {}) } : {}),
     });

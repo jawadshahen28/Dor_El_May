@@ -119,6 +119,26 @@ test('citizen/admin auth, authorization, CSRF, Origin and secure cookies work be
   await get('/api/home/summary', resident.cookie).expect(401);
 });
 
+test('production serves the PWA manifest, worker, offline document and icons with safe headers', async () => {
+  const manifest = await get('/manifest.webmanifest').expect(200);
+  assert.match(manifest.headers['content-type'], /application\/manifest\+json/);
+  assert.equal(manifest.headers['cache-control'], 'no-cache');
+  const data = typeof manifest.body.name === 'string' ? manifest.body : JSON.parse(manifest.text);
+  assert.equal(data.start_url, '/');
+  assert.equal(data.display, 'standalone');
+  const worker = await get('/sw.js').expect(200);
+  assert.match(worker.headers['content-type'], /javascript/);
+  assert.equal(worker.headers['cache-control'], 'no-cache');
+  assert.equal(worker.headers['service-worker-allowed'], '/');
+  const offline = await get('/offline.html').expect(200);
+  assert.match(offline.text, /لا يوجد اتصال بالإنترنت/);
+  assert.match(offline.headers['content-security-policy'], /worker-src 'self'/);
+  for (const icon of data.icons) await get(icon.src).expect('Content-Type', /image\/png/).expect(200);
+  await get('/icons/apple-touch-icon.png').expect(200);
+  const unknownApi = await get('/api/pwa-not-a-route').set('Accept', 'text/html').expect(404);
+  assert.match(unknownApi.headers['content-type'], /application\/json/);
+});
+
 test('both authenticated sessions survive a real Express process restart using the existing MongoDB store', async () => {
   const resident = await login(citizen, '/api/auth/login');
   const council = await login(admin, '/api/admin/login');

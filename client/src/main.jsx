@@ -9,7 +9,9 @@ import '@fontsource/tajawal/latin-400.css';
 import './styles/index.css';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
+import { PwaProvider } from './pwa/PwaProvider';
+import { NetworkBoundary, PwaNotices } from './pwa/PwaExperience';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode><BrowserRouter><AuthProvider><App /></AuthProvider></BrowserRouter></React.StrictMode>,
+  <React.StrictMode><BrowserRouter><PwaProvider><NetworkBoundary><AuthProvider><App /><PwaNotices /></AuthProvider></NetworkBoundary></PwaProvider></BrowserRouter></React.StrictMode>,
 );

@@ -30,6 +30,12 @@ await User.insertMany(['0594811111', '0594822222', '0594833333', '0594844444'].m
 })));
 // Admin fixture exists only in this explicitly invoked, disposable test server.
 await User.create({ fullName: 'مسؤول اختبار المجلس', phone: '0594911111', passwordHash: await hashPassword('AdminBrowserPass9!'), role: 'admin', status: 'active' });
+// PWA privacy fixtures are confined to this explicitly invoked temporary database.
+const pwaPasswordHash = await hashPassword('PwaBrowserPass9!');
+await User.insertMany([
+  { fullName: 'مواطن تثبيت أول', phone: '0596911111', passwordHash: pwaPasswordHash, zoneId: zones[0]._id },
+  { fullName: 'مواطن تثبيت ثان', phone: '0596922222', passwordHash: pwaPasswordHash, zoneId: zones[1]._id },
+]);
 const config = loadConfig({ SESSION_SECRET: 'temporary-browser-test-session-secret-32-characters', APP_ORIGINS: 'http://127.0.0.1:4173' });
 const store = MongoStore.create({ client: connection.getClient(), collectionName: 'sessions' });
 store.on('error', () => console.error('Browser test session store error.'));

@@ -1,0 +1,11 @@
+@import '@fontsource/tajawal/arabic-400.css';
+@import '@fontsource/tajawal/arabic-700.css';
+
+.pwa-offline-document { margin: 0; min-width: 320px; background: #f4f8fc; }
+.pwa-offline { box-sizing: border-box; min-height: 100svh; padding: max(40px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(40px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; background: #f4f8fc; color: #16385a; font-family: Tajawal, system-ui, sans-serif; direction: rtl; }
+.pwa-offline img { border-radius: 20px; }
+.pwa-offline-brand { font-size: 13px; color: #6a859d; }
+.pwa-offline h1 { margin: 6px 0 0; font-size: 28px; font-weight: 700; line-height: 1.6; }
+.pwa-offline p { margin: 0; max-width: 350px; font-size: 16px; color: #617d95; line-height: 1.9; }
+.pwa-offline button { border: 0; border-radius: 12px; background: #0879df; color: #fff; font: 700 16px Tajawal, system-ui, sans-serif; padding: 14px 30px; min-height: 48px; cursor: pointer; margin-top: 7px; }
+.pwa-offline button:focus-visible { outline: 3px solid #53b5ff; outline-offset: 4px; }

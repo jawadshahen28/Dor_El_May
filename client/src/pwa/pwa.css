@@ -1,0 +1,27 @@
+.pwa-notice { position: fixed; z-index: 80; bottom: calc(94px + env(safe-area-inset-bottom)); inset-inline-start: max(16px, env(safe-area-inset-right)); width: min(350px, calc(100vw - 32px)); display: flex; gap: 12px; align-items: flex-start; padding: 16px; border: 1px solid #d6e5f3; border-radius: 16px; background: #fff; box-shadow: 0 8px 35px #15395b1a; color: #20476b; font-family: Tajawal, sans-serif; direction: rtl; }
+.pwa-notice > svg { margin-top: 4px; color: #0879df; flex-shrink: 0; }
+.pwa-notice > div { flex: 1; min-width: 0; }
+.pwa-notice p { margin: 0; font-size: 15px; line-height: 1.7; font-weight: 700; }
+.pwa-notice small { display: block; font-size: 12px; color: #8b5e37; line-height: 1.8; }
+.pwa-notice div > button, .pwa-manual-done { min-height: 44px; background: #0879df; color: #fff; border-radius: 9px; padding: 9px 16px; font-size: 14px; font-weight: 700; border: 0; margin-top: 10px; cursor: pointer; }
+.pwa-notice-close, .pwa-dialog-close { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; color: #7990a5; background: transparent; border: 0; cursor: pointer; border-radius: 8px; }
+.pwa-notice-close { margin: -9px -9px 0 -9px; }
+.pwa-install-dialog { border: 1px solid #dce8f3; padding: 31px 25px 25px; width: min(360px, calc(100vw - 40px)); max-height: calc(100svh - 40px); margin: auto; border-radius: 20px; color: #20476b; background: #fff; text-align: center; direction: rtl; font-family: Tajawal, sans-serif; }
+.pwa-install-dialog::backdrop { background: #173a5d66; }
+.pwa-install-dialog img { border-radius: 15px; margin: 0 auto 17px; display: block; }
+.pwa-install-dialog h2 { font-size: 23px; font-weight: 700; margin: 0 0 15px; }
+.pwa-install-dialog p { color: #68819a; line-height: 2; font-size: 15px; margin: 0; }
+.pwa-install-dialog p svg { display: inline; vertical-align: middle; color: #0879df; margin-inline-end: 4px; }
+.pwa-dialog-close { position: absolute; top: 6px; left: 6px; }
+.pwa-manual-done { width: 100%; margin-top: 22px; font-family: inherit; }
+.pwa-notice button:focus-visible, .pwa-install-dialog button:focus-visible { outline: 3px solid #53b5ff; outline-offset: 3px; }
+@media (min-width: 768px) { .pwa-notice { bottom: calc(26px + env(safe-area-inset-bottom)); inset-inline-start: max(26px, env(safe-area-inset-right)); } }
+.is-standalone .citizen-header { padding-top: env(safe-area-inset-top); }
+.is-standalone .admin-topbar { padding-top: calc(15px + env(safe-area-inset-top)); }
+.is-standalone .admin-drawer { padding-top: calc(20px + env(safe-area-inset-top)); padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+@media (max-width: 767px) {
+  .is-standalone .auth-hero { padding-top: calc(27px + env(safe-area-inset-top)); height: calc(265px + env(safe-area-inset-top)); }
+  .is-standalone .auth-page--register .auth-hero { height: calc(220px + env(safe-area-inset-top)); }
+  .is-standalone .citizen-nav { padding-left: calc(8px + env(safe-area-inset-left)); padding-right: calc(8px + env(safe-area-inset-right)); }
+  .is-standalone .admin-topbar { padding-top: calc(12px + env(safe-area-inset-top)); }
+}

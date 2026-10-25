@@ -1,6 +1,6 @@
 # Door El May – Talfit: GitHub and Render staging preparation
 
-Prepared on 25 October 2026. This is a deployment guide, not a record of a live deployment. No GitHub repository or Render service has been created, no code has been pushed, and no existing Atlas records or local secrets have been changed. PWA installation/offline support is a later task.
+Originally prepared on 25 October 2026. The project has since been uploaded to GitHub and deployed to staging at <https://dor-el-may-talfit-staging.onrender.com>. This remains the configuration guide; verified PWA build/deployment results are recorded separately in `VERIFICATION.md` and the delivery report. PWA installation, offline privacy, and updates are documented in [PWA.md](PWA.md). No existing Atlas records or local secrets are changed by PWA integration.
 
 ## Service settings
 
@@ -63,9 +63,9 @@ A staging URL is public and may be discovered. A separate database prevents this
 
 ## Git and secret audit
 
-The audit found an ignored local `server/.env`. Its values were not printed or changed. The project-scoped Git inventory contains **zero tracked files and zero commits affecting this project**, so no tracked project credential exposure was found. Source credential-pattern matches were the README's placeholders and clearly isolated synthetic test fixtures; no real credentials were found in publishable source. This is a scoped scan, not proof about unrelated files or repositories.
+The original preparation audit found an ignored local `server/.env`; its values were not printed or changed. At that time the project-scoped Git inventory contained zero tracked files/commits. The project was subsequently audited, committed, and uploaded to the dedicated repository. Source credential-pattern matches were documentation placeholders and clearly isolated synthetic test fixtures. Recheck the actual staged changes before each future push; this is not a statement about unrelated repositories or files.
 
-Important local layout finding: Git currently resolves this folder to a parent checkout rooted at `C:/Users/Lenovo`; this project does not yet have its own `.git` directory. No parent repository settings or index entries were changed. When you later authorize GitHub publication, first use a project-only working directory/repository and verify `git rev-parse --show-toplevel` points to this project, not the user-home parent. Do not publish the parent checkout.
+The earlier parent-checkout layout was corrected by creating an independent `.git` inside the project, without changing the parent repository. The origin is <https://github.com/jawadshahen28/Dor_El_May>. Continue verifying `git rev-parse --show-toplevel` before publication, and do not publish a user-home parent checkout.
 
 `.gitignore` excludes environment values, dependency/build directories, local caches and artifacts, cloud/SSH/editor credentials, private key containers, credential JSON files, logs, browser traces, and database dump/backup files. Only the empty `.env.example` templates are allowed. `package-lock.json` remains publishable and is required by `npm ci`.
 
@@ -123,7 +123,7 @@ For future lockfile regeneration, use a similarly clean temporary directory and 
 | Registration cannot select a zone | The staging database is empty. Explicitly add an appropriate staging-only zone; do not copy citizen accounts or silently run the development seed. |
 | Health check fails after a database outage | Restore Atlas connectivity; inspect safe service logs and wait for driver recovery/restart. Do not replace the readiness endpoint with a permanent HTTP 200. |
 
-Remaining live checks: GitHub repository isolation and staged-file review, actual Render Linux installation, the final public HTTPS origin and proxy behavior, staging Atlas permissions/network reachability, and public-browser verification. No public deployment or PWA behavior has been tested yet.
+For each deployment, verify its commit, healthy API, exact public HTTPS origin, session behavior, and manifest/worker/icon delivery. PWA-specific checks and physical-device limitations are documented in [PWA.md](PWA.md); the historical preparation results below describe the earlier deployment-preparation phase.
 
 ## Preparation changes and results
 
