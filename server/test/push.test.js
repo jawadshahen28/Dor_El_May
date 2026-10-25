@@ -7,7 +7,7 @@ import { publicAddress, sendWebPush } from '../src/services/pushTransport.js';
 import { processPushBatch } from '../src/services/pushProcessor.js';
 import { pushMessage, safeNotificationUrl } from '../../shared/push.js';
 import { setupWorkerPush } from '../../client/src/notifications/workerPush.js';
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
@@ -55,6 +55,7 @@ test('notification clicks open approved pages without navigating an existing uns
   await done; assert.equal(closed, true); assert.deepEqual(opened, ['https://app.example/schedule']);
 });
 test('key preparation never prints secrets or overwrites files; disabled CLI never connects to MongoDB', () => {
+  mkdirSync(resolve('.cache'), { recursive: true });
   const directory = mkdtempSync(resolve('.cache/push-key-test-'));
   const command = resolve('scripts/generate-push-keys.mjs');
   const output = execFileSync(process.execPath, [command], { cwd: directory, encoding: 'utf8' });
