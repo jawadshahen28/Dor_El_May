@@ -61,6 +61,8 @@ export function createApp({ config, store, limits, isDatabaseAvailable, checkDat
   app.use('/api', (_req, res) => failure(res, 404, 'NOT_FOUND', 'الصفحة المطلوبة غير موجودة.'));
   const clientDirectory = fileURLToPath(new URL('../../client/dist/', import.meta.url));
   if (existsSync(clientDirectory)) {
+    // Only this public Android association file may bypass dotfile filtering.
+    app.get('/.well-known/assetlinks.json', (_req, res) => res.sendFile(`${clientDirectory}/.well-known/assetlinks.json`, { dotfiles: 'allow' }));
     app.use(express.static(clientDirectory, { setHeaders(res, path) {
       if (['index.html', 'offline.html', 'sw.js', 'manifest.webmanifest'].some((name) => path.endsWith(`/${name}`) || path.endsWith(`\\${name}`))) res.set('Cache-Control', 'no-cache');
       if (path.endsWith('/sw.js') || path.endsWith('\\sw.js')) res.set('Service-Worker-Allowed', '/');

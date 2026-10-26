@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.dorelmay.talfit",
+        "sha256_cert_fingerprints": ["23:6D:89:E4:97:5F:FD:F0:EF:06:CD:34:A5:CE:88:5C:3B:2E:37:C7:F7:CF:86:57:95:25:05:9C:15:8E:F9:68"]
+      }
+    }]

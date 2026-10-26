@@ -141,6 +141,22 @@ test('production serves the PWA manifest, worker, offline document and icons wit
   assert.match(unknownApi.headers['content-type'], /application\/json/);
 });
 
+test('production serves Android asset links as public JSON without redirects or sessions', async () => {
+  const source = readFileSync(new URL('../../../client/public/.well-known/assetlinks.json', import.meta.url), 'utf8');
+  for (const accept of ['application/json', 'text/html']) {
+    const response = await get('/.well-known/assetlinks.json').set('Accept', accept).expect(200);
+    assert.match(response.headers['content-type'], /^application\/json\b/);
+    assert.equal(response.text, source);
+    assert.deepEqual(response.body, JSON.parse(source));
+    assert.equal(response.headers.location, undefined);
+    assert.equal(response.headers['set-cookie'], undefined);
+  }
+  await api().head('/.well-known/assetlinks.json').expect('Content-Type', /application\/json/).expect(200);
+  for (const path of ['/.well-known/missing.json', '/.well-known/.env', '/.env', '/.git/config']) {
+    await get(path).set('Accept', 'text/html').expect(404);
+  }
+});
+
 test('both authenticated sessions survive a real Express process restart using the existing MongoDB store', async () => {
   const resident = await login(citizen, '/api/auth/login');
   const council = await login(admin, '/api/admin/login');
