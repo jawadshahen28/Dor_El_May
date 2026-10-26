@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { pwaManifest } from '../../client/pwa.config.js';
 import { isApiPath, isPublicStaticUrl, isVersionedAsset, MAX_STATIC_VERSIONS } from '../../client/src/pwa/cachePolicy.js';
-import { ANDROID_CHROME_INTENT, INSTALL_URL, installationHints } from '../../client/src/pwa/installation.js';
 
 test('PWA identity starts the existing root authentication flow in standalone Arabic RTL', () => {
   assert.equal(pwaManifest.name, 'دور المي – تلفيت');
@@ -41,17 +40,4 @@ test('cache allowlist rejects all authenticated data, navigations, foreign origi
   assert.equal(isApiPath('/apiary'), false);
   assert.equal(isVersionedAsset('/assets/unversioned.js'), false);
   assert.equal(MAX_STATIC_VERSIONS, 3);
-  assert.equal(isPublicStaticUrl(new URL('/install', origin), origin), false);
-});
-
-test('installation sharing uses a fixed HTTPS destination and a Chrome-only Android intent', () => {
-  assert.equal(INSTALL_URL, 'https://dor-el-may-talfit-staging.onrender.com/install');
-  assert.equal(ANDROID_CHROME_INTENT, 'intent://dor-el-may-talfit-staging.onrender.com/install#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(INSTALL_URL) + ';end');
-});
-
-test('installation device hints include desktop-mode iPad and leave unknown embedded browsers unclassified', () => {
-  assert.equal(installationHints({ platform: 'MacIntel', maxTouchPoints: 5 }).ios, true);
-  assert.equal(installationHints({ platform: 'MacIntel', maxTouchPoints: 0 }).ios, false);
-  assert.deepEqual(installationHints({ userAgent: 'Android 14; wv; Chrome/130' }), { ios: false, android: true, embedded: true });
-  assert.deepEqual(installationHints({ userAgent: 'Android 14; UnlistedSocialApp/1' }), { ios: false, android: true, embedded: false });
 });

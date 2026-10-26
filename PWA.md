@@ -6,20 +6,6 @@ Staging: <https://dor-el-may-talfit-staging.onrender.com>. Installation belongs 
 
 ## Install
 
-### One link for Android and iPhone
-
-Share <https://dor-el-may-talfit-staging.onrender.com/install>. This public Arabic RTL page works without signing in, including while the session API is still loading. Its app-entry button uses the existing `/` authentication/home flow; the manifest identity and `start_url` remain `/`.
-
-The page reuses `PwaProvider`, with one `beforeinstallprompt` listener and one `appinstalled` listener. An actual browser event enables the install button. Each event is consumed once, only on a user click. Prompt acceptance alone does not imply standalone execution; `appinstalled` supplies browser confirmation, while display-mode/iOS standalone checks identify the current app window. The optional normal-app install banner is suppressed on `/install`; its existing dismissal preference remains effective elsewhere.
-
-Without a prompt, the page supplies manual browser instructions. iPhone/iPad guidance includes Safari's Page Menu → Share layout and Open as Web App. Android users can explicitly try a Chrome intent whose destination and HTTPS fallback are fixed to the installation URL. No query parameter, return URL or host-app value can change that destination. This is one attempt per page visit, with no automatic launch/retry; host apps can block it. Known embedded-browser user agents are hints only: unknown browsers receive the same manual/copy fallback. Clipboard access falls back to selection-based copying, then a visible selected URL if automatic copying is denied.
-
-No APK, store, dependency, new service, notification permission request, worker-cache change, or push configuration is introduced by this page. Render's existing Express SPA fallback handles direct navigation and refresh. Deploy the existing **dor-el-may-talfit-staging** Web Service from `main` if it does not deploy automatically.
-
-Focused browser coverage: `node scripts/run-browser-tests.mjs tests/install.spec.js` after `npm run build`. Screenshots are written to ignored `artifacts/screenshots/install-*.png`. Browser tests simulate prompt outcomes, user agents, standalone modes, clipboard failures and blocked external navigation; they do not claim physical installation or compatibility with every social app. Verify the shared link on actual Android Chrome, iPhone/iPad Safari, and the council's social/messaging apps, including installation, launch to `/`, sign-in and the existing opt-in notification flow.
-
-Browser guidance references: [Chrome installation events](https://web.dev/articles/customize-install), [Android intents](https://developer.chrome.com/docs/android/intents), [Apple Safari installation steps](https://support.apple.com/guide/iphone/open-as-web-app-iphea86e5236/ios), and [WebKit Home Screen Web Push](https://webkit.org/blog/13878/).
-
 **Android:** Open the HTTPS site in Chrome. When the browser offers installation, select **تثبيت التطبيق** in the app's small installation card, or use Chrome's menu → Install app / Add to Home screen. Confirm the browser's installation dialog.
 
 **iPhone/iPad:** Open the site in Safari. Select Share → Add to Home Screen → Add. If an Open as Web App option appears, leave it enabled. The app's **خطوات التثبيت** card explains these manual steps; it does not imitate a native iOS install prompt.

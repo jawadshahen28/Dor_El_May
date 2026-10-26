@@ -1,11 +1,9 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { installationHints } from './installation';
 
 export const INSTALL_DISMISS_KEY = 'door-pwa-install-dismissed-until';
 const PwaContext = createContext(null);
 let registrationPromise;
-const installedDisplayModes = '(display-mode: standalone), (display-mode: minimal-ui), (display-mode: window-controls-overlay)';
-const standaloneDisplay = () => window.matchMedia(installedDisplayModes).matches || window.navigator.standalone === true;
+const standaloneDisplay = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 const dismissalActive = () => { try { return Number(localStorage.getItem(INSTALL_DISMISS_KEY)) > Date.now(); } catch { return false; } };
 
 function registerWorker() {
@@ -21,9 +19,6 @@ export function PwaProvider({ children }) {
   const [offline, setOffline] = useState(() => !navigator.onLine);
   const [standalone, setStandalone] = useState(standaloneDisplay);
   const [installEvent, setInstallEvent] = useState(null);
-  const [installing, setInstalling] = useState(false);
-  const [installationConfirmed, setInstallationConfirmed] = useState(false);
-  const deferredInstall = useRef(null);
   const [dismissed, setDismissed] = useState(dismissalActive);
   const [needUpdate, setNeedUpdate] = useState(false);
   const [updateError, setUpdateError] = useState('');
@@ -34,16 +29,11 @@ export function PwaProvider({ children }) {
   const dirtyForms = useRef(new WeakSet());
 
   useEffect(() => {
-    const media = window.matchMedia(installedDisplayModes);
+    const media = window.matchMedia('(display-mode: standalone)');
     const displayChanged = () => setStandalone(standaloneDisplay());
     const disconnected = () => setOffline(true);
-    const beforeInstall = (event) => {
-      if (installationHints(navigator).ios || typeof event.prompt !== 'function') return;
-      event.preventDefault();
-      deferredInstall.current = event;
-      setInstallEvent(event);
-    };
-    const installed = () => { setInstallationConfirmed(true); deferredInstall.current = null; setInstallEvent(null); };
+    const beforeInstall = (event) => { event.preventDefault(); setInstallEvent(event); };
+    const installed = () => { setStandalone(true); setInstallEvent(null); };
     const changed = (event) => { const form = event.target.closest?.('form'); if (form) dirtyForms.current.add(form); };
     const reset = (event) => dirtyForms.current.delete(event.target);
     const message = (event) => { if (event.data?.type === 'API_NETWORK_FAILURE') setOffline(true); };
@@ -117,19 +107,13 @@ export function PwaProvider({ children }) {
     try { localStorage.setItem(INSTALL_DISMISS_KEY, String(Date.now() + 30 * 86400000)); } catch {}
   };
   const install = async () => {
-    const event = deferredInstall.current;
-    if (!event || standalone || installationHints(navigator).ios) return 'unavailable';
-    // Consume once, before any await; repeated clicks cannot reuse the event.
-    deferredInstall.current = null;
-    setInstallEvent(null);
-    setInstalling(true);
+    if (!installEvent) return;
     try {
-      await event.prompt();
-      const choice = await event.userChoice;
+      await installEvent.prompt();
+      const choice = await installEvent.userChoice;
       if (choice.outcome === 'dismissed') dismissInstall();
       else setDismissed(true);
-      return choice.outcome;
-    } finally { setInstalling(false); }
+    } finally { setInstallEvent(null); }
   };
   const update = async () => {
     if (updating) return;
@@ -143,7 +127,7 @@ export function PwaProvider({ children }) {
     if (waiting) waiting.postMessage({ type: 'SKIP_WAITING' });
     else window.location.reload();
   };
-  return <PwaContext.Provider value={{ offline, standalone, installEvent, installing, installationConfirmed, dismissed, dismissInstall, install, needUpdate, update, updating, updateError }}>{children}</PwaContext.Provider>;
+  return <PwaContext.Provider value={{ offline, standalone, installEvent, dismissed, dismissInstall, install, needUpdate, update, updating, updateError }}>{children}</PwaContext.Provider>;
 }
 
 export const usePwa = () => useContext(PwaContext);

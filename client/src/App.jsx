@@ -13,7 +13,6 @@ const AnnouncementsRoutes = lazy(() => import('./pages/AnnouncementsRoutes').the
 const CitizenWorkspaceRoutes = lazy(() => import('./pages/CitizenWorkspaceRoutes').then((module) => ({ default: module.CitizenWorkspaceRoutes })));
 const AdminRoutes = lazy(() => import('./pages/admin/AdminRoutes').then((module) => ({ default: module.AdminRoutes })));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage').then((module) => ({ default: module.NotificationsPage })));
-const InstallPage = lazy(() => import('./pages/InstallPage').then((module) => ({ default: module.InstallPage })));
 const adminUser = (user) => ['admin', 'council_admin'].includes(user?.role);
 
 function ProtectedRoute() { const { user } = useAuth(); return adminUser(user) ? <Navigate to="/admin" replace /> : user ? <Outlet /> : <Navigate to="/login" replace />; }
@@ -24,13 +23,12 @@ export default function App() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
-    const titles = { '/install': 'تثبيت التطبيق', '/login': 'تسجيل الدخول', '/register': 'إنشاء حساب جديد', '/home': 'الرئيسية', '/schedule': 'جدول المياه', '/announcements': 'إعلانات المجلس', '/reports': 'البلاغات', '/account': 'حسابي', '/guest': 'تصفح كزائر', '/notifications': 'الإشعارات' };
+    const titles = { '/login': 'تسجيل الدخول', '/register': 'إنشاء حساب جديد', '/home': 'الرئيسية', '/schedule': 'جدول المياه', '/announcements': 'إعلانات المجلس', '/reports': 'البلاغات', '/account': 'حسابي', '/guest': 'تصفح كزائر', '/notifications': 'الإشعارات' };
     const adminTitles = { '/admin/login': 'تسجيل دخول المجلس', '/admin/water': 'إدارة الضخ', '/admin/schedule': 'إدارة جدول المياه' };
-    document.title = `${adminTitles[pathname] || (pathname.startsWith('/admin') ? 'لوحة تحكم المجلس' : titles[pathname.toLowerCase().replace(/\/$/, '')]) || (pathname.startsWith('/announcements/') ? 'تفاصيل الإعلان' : 'دور المي')} — دور المي، تلفيت`;
+    document.title = `${adminTitles[pathname] || (pathname.startsWith('/admin') ? 'لوحة تحكم المجلس' : titles[pathname]) || (pathname.startsWith('/announcements/') ? 'تفاصيل الإعلان' : 'دور المي')} — دور المي، تلفيت`;
   }, [pathname]);
-  if (status === 'loading' && !/^\/install\/?$/i.test(pathname)) return <LoadingScreen />;
+  if (status === 'loading') return <LoadingScreen />;
   return <Routes>
-    <Route path="/install" element={<Suspense fallback={<LoadingScreen />}><InstallPage /></Suspense>} />
     <Route path="/" element={<Navigate to={adminUser(user) ? '/admin' : user ? '/home' : '/login'} replace />} />
     <Route path="/admin/*" element={<Suspense fallback={<LoadingScreen />}><AdminRoutes /></Suspense>} />
     <Route element={<PublicRoute />}><Route path="/login" element={<LoginPage />} /><Route path="/register" element={<RegisterPage />} /></Route>

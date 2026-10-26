@@ -76,7 +76,7 @@ after(async () => { await stop(); await mongoose.disconnect(); await mongo?.stop
 test('real production startup uses PORT and 0.0.0.0, serves SPA refresh routes/assets, and never replaces APIs with HTML', async () => {
   assert.ok(output.includes(`API: http://0.0.0.0:${port}`));
   const html = readFileSync(new URL('../../../client/dist/index.html', import.meta.url), 'utf8');
-  for (const path of ['/', '/install', '/install/', '/home', '/schedule', '/announcements', '/announcements/100000000000000000000001', '/reports', '/account', '/notifications', '/admin', '/admin/login', '/admin/water', '/admin/schedule']) {
+  for (const path of ['/', '/home', '/schedule', '/announcements', '/announcements/100000000000000000000001', '/reports', '/account', '/notifications', '/admin', '/admin/login', '/admin/water', '/admin/schedule']) {
     const response = await get(path).set('Accept', 'text/html').expect(200);
     assert.equal(response.text, html);
     assert.equal(response.headers['cache-control'], 'no-cache');

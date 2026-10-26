@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Download, RefreshCw, Share, X } from 'lucide-react';
 import { usePwa } from './PwaProvider';
-import { installationHints } from './installation';
 import './offline.css';
 import './pwa.css';
 
@@ -22,14 +21,14 @@ export function NetworkBoundary({ children }) {
 
 export function PwaNotices() {
   const { pathname } = useLocation();
-  const { standalone, installationConfirmed, installEvent, dismissed, dismissInstall, install, needUpdate, update, updating, updateError } = usePwa();
+  const { standalone, installEvent, dismissed, dismissInstall, install, needUpdate, update, updating, updateError } = usePwa();
   const [manualReady, setManualReady] = useState(false);
   const [installError, setInstallError] = useState('');
   const dialog = useRef(null);
-  const { ios, android } = installationHints(navigator);
-  const mobile = ios || android;
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const mobile = ios || /Android/.test(navigator.userAgent);
   useEffect(() => { const timer = setTimeout(() => setManualReady(true), 8000); return () => clearTimeout(timer); }, []);
-  const eligible = !/^\/install\/?$/i.test(pathname) && !pathname.startsWith('/admin') && !standalone && !installationConfirmed && !dismissed && (installEvent || (mobile && manualReady));
+  const eligible = !pathname.startsWith('/admin') && !standalone && !dismissed && (installEvent || (mobile && manualReady));
   async function installClicked() {
     if (!installEvent) { dialog.current.showModal(); return; }
     try { await install(); } catch { setInstallError('تعذّر فتح نافذة التثبيت. يمكنك استخدام قائمة المتصفح لإضافة التطبيق.'); }
