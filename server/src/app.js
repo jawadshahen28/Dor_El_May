@@ -61,6 +61,8 @@ export function createApp({ config, store, limits, isDatabaseAvailable, checkDat
   app.use('/api', (_req, res) => failure(res, 404, 'NOT_FOUND', 'الصفحة المطلوبة غير موجودة.'));
   const clientDirectory = fileURLToPath(new URL('../../client/dist/', import.meta.url));
   if (existsSync(clientDirectory)) {
+    // Temporary, standalone browser-opening experiment; independent of the SPA.
+    app.get('/browser-test', (_req, res) => res.set('Cache-Control', 'no-store').sendFile(`${clientDirectory}/browser-test/index.html`));
     // Only this public Android association file may bypass dotfile filtering.
     app.get('/.well-known/assetlinks.json', (_req, res) => res.sendFile(`${clientDirectory}/.well-known/assetlinks.json`, { dotfiles: 'allow' }));
     app.use(express.static(clientDirectory, { setHeaders(res, path) {
