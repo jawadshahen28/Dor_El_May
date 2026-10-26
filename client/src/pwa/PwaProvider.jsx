@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { browserHints } from '../installation/flow';
 
 export const INSTALL_DISMISS_KEY = 'door-pwa-install-dismissed-until';
 const PwaContext = createContext(null);
@@ -19,6 +20,9 @@ export function PwaProvider({ children }) {
   const [offline, setOffline] = useState(() => !navigator.onLine);
   const [standalone, setStandalone] = useState(standaloneDisplay);
   const [installEvent, setInstallEvent] = useState(null);
+  const [installing, setInstalling] = useState(false);
+  const [installationConfirmed, setInstallationConfirmed] = useState(false);
+  const deferredInstall = useRef(null);
   const [dismissed, setDismissed] = useState(dismissalActive);
   const [needUpdate, setNeedUpdate] = useState(false);
   const [updateError, setUpdateError] = useState('');
@@ -32,8 +36,12 @@ export function PwaProvider({ children }) {
     const media = window.matchMedia('(display-mode: standalone)');
     const displayChanged = () => setStandalone(standaloneDisplay());
     const disconnected = () => setOffline(true);
-    const beforeInstall = (event) => { event.preventDefault(); setInstallEvent(event); };
-    const installed = () => { setStandalone(true); setInstallEvent(null); };
+    const beforeInstall = (event) => {
+      if (browserHints(navigator).ios || typeof event.prompt !== 'function') return;
+      event.preventDefault(); deferredInstall.current = event; setInstallEvent(event);
+    };
+    // Confirmation does not mean this browser tab is now a standalone window.
+    const installed = () => { setInstallationConfirmed(true); deferredInstall.current = null; setInstallEvent(null); };
     const changed = (event) => { const form = event.target.closest?.('form'); if (form) dirtyForms.current.add(form); };
     const reset = (event) => dirtyForms.current.delete(event.target);
     const message = (event) => { if (event.data?.type === 'API_NETWORK_FAILURE') setOffline(true); };
@@ -107,13 +115,17 @@ export function PwaProvider({ children }) {
     try { localStorage.setItem(INSTALL_DISMISS_KEY, String(Date.now() + 30 * 86400000)); } catch {}
   };
   const install = async () => {
-    if (!installEvent) return;
+    const event = deferredInstall.current;
+    if (!event || standalone || browserHints(navigator).ios) return 'unavailable';
+    deferredInstall.current = null;
+    setInstallEvent(null); setInstalling(true);
     try {
-      await installEvent.prompt();
-      const choice = await installEvent.userChoice;
+      await event.prompt();
+      const choice = await event.userChoice;
       if (choice.outcome === 'dismissed') dismissInstall();
       else setDismissed(true);
-    } finally { setInstallEvent(null); }
+      return choice.outcome;
+    } finally { setInstalling(false); }
   };
   const update = async () => {
     if (updating) return;
@@ -127,7 +139,7 @@ export function PwaProvider({ children }) {
     if (waiting) waiting.postMessage({ type: 'SKIP_WAITING' });
     else window.location.reload();
   };
-  return <PwaContext.Provider value={{ offline, standalone, installEvent, dismissed, dismissInstall, install, needUpdate, update, updating, updateError }}>{children}</PwaContext.Provider>;
+  return <PwaContext.Provider value={{ offline, standalone, installEvent, installing, installationConfirmed, dismissed, dismissInstall, install, needUpdate, update, updating, updateError }}>{children}</PwaContext.Provider>;
 }
 
 export const usePwa = () => useContext(PwaContext);

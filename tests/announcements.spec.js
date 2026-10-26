@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/installed-pwa.js';
 import { mkdir } from 'node:fs/promises';
 
 test.use({ timezoneId: 'America/Los_Angeles' });

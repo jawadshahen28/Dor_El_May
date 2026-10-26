@@ -1,0 +1,69 @@
+.installation-screen { position: relative; isolation: isolate; min-height: 100svh; background: #073979; color: #fff; }
+.installation-village, .installation-shade { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
+.installation-village { object-fit: cover; object-position: 50% 54%; }
+.installation-shade { z-index: -1; background: linear-gradient(180deg, #004599e8 0%, #064899cf 24%, #063d7a99 44%, #032e5e45 64%, #031c40c9 100%); }
+.installation-frame { width: min(1100px, 100%); min-height: 100svh; margin: auto; padding: max(52px, env(safe-area-inset-top)) max(26px, env(safe-area-inset-right)) max(60px, env(safe-area-inset-bottom)) max(26px, env(safe-area-inset-left)); display: flex; flex-direction: column; }
+.installation-brand { display: flex; justify-content: center; }
+.installation-brand img { display: block; width: 112px; height: 112px; object-fit: contain; background: #fff; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 5px 25px #001d4966; }
+.installation-hero { flex: 1; width: min(500px, 100%); margin: 0 auto; padding: 26px 0 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.installation-water-mark { width: 64px; height: 80px; object-fit: contain; margin-bottom: 12px; filter: drop-shadow(0 3px 14px #d1edff55); }
+.installation-hero h1 { font-size: 52px; line-height: 1.5; letter-spacing: -.8px; font-weight: 800; text-shadow: 0 3px 20px #002e6b55; }
+.installation-lead { max-width: 440px; font-size: 23px; font-weight: 700; line-height: 1.85; color: #f5f9ff; margin-top: 13px; text-shadow: 0 2px 10px #00295599; }
+.installation-gateway-actions { width: 100%; padding-top: 56px; margin-top: auto; }
+.installation-cta { direction: ltr; display: grid; grid-template-columns: 30px minmax(0, 1fr) 25px; align-items: center; gap: 12px; min-height: 72px; width: 100%; padding: 16px 23px; border: 1px solid #92dcffbd; border-radius: 999px; background: linear-gradient(160deg, #0eb5ff 0%, #0087f7 43%, #004edc 100%); color: #fff; box-shadow: 0 12px 26px #002a655c, inset 0 1px 2px #ffffff80; font: inherit; font-size: 23px; font-weight: 800; line-height: 1.6; cursor: pointer; text-align: center; }
+.installation-cta > svg { flex-shrink: 0; }
+.installation-cta:hover { background: linear-gradient(160deg, #10a9ee, #087ce4 43%, #0647c6); }
+.installation-cta:disabled { opacity: .7; }
+.installation-action-note { font-size: 16px; line-height: 1.85; color: #f1f7ff; margin-top: 17px; text-shadow: 0 2px 8px #001e45; }
+.installation-ios-note { color: #edf6ff; font-size: 14px; line-height: 1.85; margin-top: 12px; }
+.installation-glass { width: 100%; margin-top: auto; padding: 22px 18px; border: 1px solid #e3f1ff73; border-radius: 27px; background: linear-gradient(125deg, #c4e0ff4d, #d3e6ff1c); box-shadow: 0 12px 35px #001c4c40, inset 0 1px #ffffff36; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.installation-screen--setup .installation-lead { margin-bottom: 52px; }
+.installation-open-note { font-size: 13px; line-height: 1.9; color: #e2f0fc; margin-top: 16px; }
+.installation-feedback { margin-top: 16px; font-size: 14px; line-height: 1.9; padding: 12px; border-radius: 11px; background: #001a3a80; color: #fff; }
+.installation-copy { width: 100%; margin-top: 13px; text-align: center; }
+.installation-copy button { display: inline-flex; gap: 7px; align-items: center; justify-content: center; min-height: 44px; padding: 10px 14px; color: #f0f8ff; background: transparent; border-radius: 9px; font-size: 14px; font-weight: 500; }
+.installation-copy button:hover { background: #ffffff12; }
+.installation-copy p { color: #e8f7ff; font-size: 13px; line-height: 1.9; }
+.installation-copy input { width: 100%; min-width: 0; min-height: 47px; padding: 10px; margin: 10px 0; background: #fff; border-radius: 9px; border: 1px solid #c4dff2; color: #153e5f; font-size: 16px; }
+.installation-recovery { display: flex; flex-wrap: wrap; justify-content: center; align-items: start; column-gap: 18px; margin-top: 12px; }
+.installation-recovery .installation-copy { width: auto; max-width: 100%; margin-top: 0; flex: 0 1 auto; }
+.installation-recovery .installation-copy:has(input), .installation-recovery .installation-copy:has(p:not(:empty)) { flex-basis: 100%; }
+.installation-fallback { max-width: 100%; text-align: start; color: #eff7ff; }
+.installation-fallback[open] { flex-basis: 100%; }
+.installation-fallback summary { min-height: 44px; padding: 10px 4px; cursor: pointer; text-align: center; font-size: 13px; }
+.installation-fallback p { margin-top: 6px; padding: 15px; border-radius: 12px; background: #001832a3; font-size: 14px; line-height: 1.9; }
+.installation-manual { text-align: start; }
+.installation-manual h2 { font-size: 22px; font-weight: 700; line-height: 1.5; margin-bottom: 17px; }
+.installation-manual ol { margin: 0; padding-inline-start: 21px; display: grid; gap: 12px; list-style: decimal; }
+.installation-manual li { padding-inline-start: 4px; color: #f1f7ff; font-size: 16px; line-height: 1.85; }
+.installation-manual li::marker { color: #c2e9ff; font-weight: 700; }
+.installation-manual > p { margin-top: 17px; color: #e0effc; font-size: 13px; line-height: 1.9; }
+.installation-browser-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 13px; color: #fff; font-size: 15px; text-decoration: underline; text-underline-offset: 4px; }
+.installation-confirmation > svg { display: block; color: #bfeaff; margin: 0 auto 16px; }
+.installation-confirmation h2 { font-size: 24px; font-weight: 700; line-height: 1.6; }
+.installation-confirmation p { margin-top: 12px; color: #f1f7ff; font-size: 16px; line-height: 1.9; }
+.installation-screen :is(a, button, summary, input):focus-visible { outline: 3px solid #c6edff; outline-offset: 4px; }
+@media (max-width: 650px) {
+  .installation-frame { padding: max(48px, env(safe-area-inset-top)) max(21px, env(safe-area-inset-right)) max(60px, env(safe-area-inset-bottom)) max(21px, env(safe-area-inset-left)); }
+  .installation-brand img { width: 96px; height: 96px; }
+  .installation-hero { padding-top: 23px; }
+  .installation-water-mark { width: 55px; height: 70px; margin-bottom: 11px; }
+  .installation-hero h1 { font-size: clamp(32px, 9.8vw, 40px); letter-spacing: -.5px; }
+  .installation-lead { font-size: 19px; max-width: 350px; margin-top: 12px; }
+  .installation-gateway-actions { padding-top: 44px; }
+  .installation-cta { font-size: 19px; min-height: 66px; padding: 15px 18px; gap: 8px; grid-template-columns: 27px minmax(0, 1fr) 22px; }
+  .installation-cta svg { width: 26px; }
+  .installation-action-note { font-size: 14px; margin-top: 14px; }
+  .installation-glass { padding: 20px 14px; border-radius: 23px; }
+  .installation-screen--setup .installation-lead { margin-bottom: 45px; }
+}
+@media (max-width: 359px) {
+  .installation-frame { padding-top: max(32px, env(safe-area-inset-top)); padding-inline: 16px; }
+  .installation-brand img { width: 84px; height: 84px; }
+  .installation-hero { padding-top: 17px; }
+  .installation-water-mark { width: 49px; height: 62px; }
+  .installation-lead { font-size: 17px; }
+  .installation-cta { font-size: 16px; padding-inline: 13px; gap: 5px; }
+  .installation-glass { padding-inline: 12px; }
+  .installation-action-note { font-size: 13px; }
+}

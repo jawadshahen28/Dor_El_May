@@ -98,6 +98,23 @@ test('real production startup uses PORT and 0.0.0.0, serves SPA refresh routes/a
   assert.match(health.headers['strict-transport-security'], /max-age=/);
 });
 
+test('download/setup have crawler-visible metadata, no login requirement, and a safe legacy redirect', async () => {
+  for (const path of ['/download', '/setup']) {
+    const response = await get(path).expect(200);
+    assert.match(response.headers['content-type'], /text\/html/);
+    assert.equal(response.headers['set-cookie'], undefined);
+    assert.equal(response.headers.location, undefined);
+    assert.equal(response.headers['cache-control'], 'no-cache');
+    const html = readFileSync(new URL(`../../../client/dist${path}.html`, import.meta.url), 'utf8');
+    assert.equal(response.text, html);
+    assert.match(html, /<title>دور المي \| مجلس قروي تلفيت<\/title>/);
+    assert.match(html, /property="og:image" content="https:\/\/dor-el-may-talfit-staging.onrender.com\/images\/talfit-council-logo.jpg"/);
+    assert.match(html, /rel="manifest"/);
+  }
+  await get('/browser-test?next=https://untrusted.example').expect('Location', '/download').expect(302);
+  await get('/browser-test/browser-test.js').expect(404);
+});
+
 test('citizen/admin auth, authorization, CSRF, Origin and secure cookies work behind the simulated HTTPS proxy', async () => {
   await get('/api/admin/dashboard').expect(401);
   for (const path of ['/api/admin/water', '/api/admin/water-rounds']) await get(path).expect(401);

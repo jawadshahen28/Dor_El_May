@@ -2,6 +2,7 @@ import { test, expect, chromium } from '@playwright/test';
 import { mkdir, mkdtemp } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { isPublicStaticUrl, STATIC_CACHE_PREFIX } from '../client/src/pwa/cachePolicy.js';
+import { emulateInstalledPwa } from './fixtures/installed-pwa.js';
 
 test.use({ serviceWorkers: 'allow', viewport: { width: 390, height: 844 } });
 const origin = 'http://127.0.0.1:4173';
@@ -12,6 +13,7 @@ async function controlled(page) {
   });
 }
 async function signIn(page, phone = '0596911111', admin = false) {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'standalone', { value: true, configurable: true }));
   await page.goto('/login');
   await controlled(page);
   const me = (await (await page.request.get('/api/auth/me')).json()).data;
@@ -53,7 +55,7 @@ test('Chrome accepts the manifest and icons, registers the real worker, and cach
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/login');
+  await page.goto('/setup');
   await controlled(page);
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   const manifestResponse = await page.request.get('/manifest.webmanifest');
@@ -138,22 +140,21 @@ test('administrator pages have the same safe offline fallback and no admin JSON 
 });
 
 test('eligible installation calls the browser event, persists dismissal, and never prompts a standalone app', async ({ page }) => {
-  await page.goto('/login');
+  await page.goto('/setup');
   await controlled(page);
   await offerInstall(page);
-  const prompt = page.getByRole('complementary', { name: 'تثبيت دور المي' });
-  await expect(prompt.getByText('ثبّت تطبيق دور المي على هاتفك', { exact: true })).toBeVisible();
+  const prompt = page.getByRole('button', { name: 'تثبيت التطبيق', exact: true });
+  await expect(prompt).toBeVisible();
   await page.screenshot({ path: 'artifacts/screenshots/pwa-install-mobile.png' });
-  await prompt.getByRole('button', { name: 'تثبيت التطبيق', exact: true }).click();
+  await prompt.click();
   expect(await page.evaluate(() => window.pwaPromptCalls)).toBe(1);
   await expect(prompt).not.toBeVisible();
   expect(await page.evaluate(() => Number(localStorage.getItem('door-pwa-install-dismissed-until')) > Date.now())).toBe(true);
-  await page.reload(); await offerInstall(page);
-  await expect(prompt).not.toBeVisible();
   await page.evaluate(() => { localStorage.removeItem('door-pwa-install-dismissed-until'); Object.defineProperty(navigator, 'standalone', { value: true, configurable: true }); });
   await page.addInitScript(() => Object.defineProperty(navigator, 'standalone', { value: true, configurable: true }));
   await page.reload(); await offerInstall(page);
   await expect(prompt).not.toBeVisible();
+  await expect(page).toHaveURL(/\/login$/);
   await expect(page.locator('html')).toHaveClass(/is-standalone/);
   await signIn(page);
   const navigation = await page.getByRole('navigation', { name: 'التنقل الرئيسي' }).boundingBox();
@@ -162,27 +163,23 @@ test('eligible installation calls the browser event, persists dismissal, and nev
   await page.screenshot({ path: 'artifacts/screenshots/pwa-standalone-home-mobile.png', fullPage: true });
 });
 
-test('iPhone guidance is manual, accessible, dismissible and fits a 390px viewport', async ({ browser }) => {
+test('iPhone setup guidance is manual, accessible and fits a 390px viewport', async ({ browser }) => {
   const context = await browser.newContext({ serviceWorkers: 'allow', viewport: { width: 390, height: 844 }, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1', isMobile: true, hasTouch: true });
   await context.addInitScript(() => window.addEventListener('beforeinstallprompt', (event) => { event.preventDefault(); event.stopImmediatePropagation(); }, true));
   const page = await context.newPage();
-  await page.goto('/login');
+  await page.goto('/setup');
   await controlled(page);
-  await page.getByRole('button', { name: 'خطوات التثبيت', exact: true }).click({ timeout: 12000 });
-  const dialog = page.getByRole('dialog', { name: 'تثبيت دور المي على iPhone' });
+  const dialog = page.locator('.installation-manual');
   await expect(dialog).toContainText('Safari');
   await expect(dialog).toContainText('إضافة إلى الشاشة الرئيسية');
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'artifacts/screenshots/pwa-iphone-instructions.png' });
-  await page.keyboard.press('Escape');
-  await expect(dialog).not.toBeVisible();
-  await page.getByRole('button', { name: 'إخفاء اقتراح التثبيت', exact: true }).click();
-  await page.reload();
   await expect(page.getByRole('complementary', { name: 'تثبيت دور المي' })).not.toBeVisible();
   await context.close();
 });
 
 test('a real waiting worker prompts without reloading drafts; only explicit acceptance reloads its own tab', async ({ page, context }) => {
+  await emulateInstalledPwa(context);
   await page.goto('/login'); await controlled(page);
   await page.getByLabel('رقم الهاتف', { exact: true }).fill('0596911111');
   const other = await context.newPage();

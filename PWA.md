@@ -6,13 +6,31 @@ Staging: <https://dor-el-may-talfit-staging.onrender.com>. Installation belongs 
 
 ## Install
 
-**Android:** Open the HTTPS site in Chrome. When the browser offers installation, select **تثبيت التطبيق** in the app's small installation card, or use Chrome's menu → Install app / Add to Home screen. Confirm the browser's installation dialog.
+Share **<https://dor-el-may-talfit-staging.onrender.com/download>**. The gateway uses the real village photograph, official council logo and existing water-drop mark. Its centered branding, pill-shaped CTA and the setup page's glass action panel follow the two October 26 design references; the generated backgrounds/logos in those references are not used as site assets.
 
-**iPhone/iPad:** Open the site in Safari. Select Share → Add to Home Screen → Add. If an Open as Web App option appears, leave it enabled. The app's **خطوات التثبيت** card explains these manual steps; it does not imitate a native iOS install prompt.
+**Android:** The gateway's user-clicked anchor retains the Chrome Intent format physically verified on the earlier browser test, with the destination changed to `/setup`. Recognized external Chrome uses a normal client-side link to `/setup`, preserving any captured install event. Known webview/app hints help distinguish embedded Chrome user agents; an app that hides its identity can require manual browser opening. No automatic browser launch or retry occurs. Copy Link always copies the fixed HTTPS setup URL; denied clipboard access reveals a selected URL for manual copying.
 
-Eligible browsers use the real `beforeinstallprompt` event. Dismissing the card or native prompt suppresses the suggestion for 30 days using a timestamp preference only. No account information or token is placed in localStorage. The card is hidden in standalone mode and on admin routes. Unsupported mobile browsers receive manual instructions after a short delay. Installation UI is offered by browser capability, not as a guarantee for every browser or OS version.
+**iPhone/iPad:** Use the same sharing link, open the setup URL in Safari, then Page Menu → Share (or Share directly) → Add to Home Screen. Enable Open as Web App when offered, then Add. The page supplies manual instructions and no Android Intent or native-install promise on iOS.
 
-The manifest uses `دور المي – تلفيت`, short name `دور المي`, Council branding in its description, `lang=ar`, `dir=rtl`, `display=standalone`, and a stable root `id`, `scope`, and `start_url`. Opening `/` invokes the existing authentication flow. Valid cookie sessions continue under the existing session rules; if an OS isolates the installed app's cookie storage from Safari/Chrome, sign in once in that installed context.
+`/setup` reuses the single existing `PwaProvider` listener for `beforeinstallprompt` and `appinstalled`. The real install button exists only when a deferred event is available. The event is consumed once, synchronously from the user's click. Acceptance/dismissal and browser confirmation are separate states; confirmation never marks the current browser tab standalone. Without an event, browser-menu instructions replace the button. The original optional install banner is suppressed on these two pages to avoid duplicates; update handling remains intact.
+
+Ordinary browser visits to `/`, citizen login/registration/guest routes, and citizen feature routes lead to `/download`. Installed windows use supported display-mode/iOS standalone checks and retain the existing citizen UI, authentication, navigation and notifications. `/admin` and its secure login/dashboard remain available in ordinary browsers. Mode detection controls presentation only: it supplies no API access, role or session. Existing server authentication, authorization, CSRF, origins, cookies, API routes, health checks, static assets and asset links remain unchanged.
+
+The manifest retains `دور المي – تلفيت`, root `id`, `scope`, and `start_url`, `display=standalone`, Arabic RTL and the existing icons. An installed launch at `/` reaches the original authentication/home flow; opening `/download` or `/setup` inside the installed app returns to that flow without a gateway loop. Existing sessions remain subject to the same rules. Where the OS isolates Home Screen storage from Safari/Chrome, sign in once inside the installed app.
+
+The temporary browser-test assets and test are removed; `/browser-test` redirects to `/download`. The cancelled `/install` route remains absent. Dedicated Vite HTML entries for `/download` and `/setup` expose the requested title, description and official council preview image to crawlers before JavaScript runs. Express serves those files on the existing Web Service; no Render configuration, environment setting or additional service is introduced.
+
+### Shorter public URLs
+
+The safest short branded link is a council-owned HTTPS address or short path that redirects to the current `/download` URL. Configure a fixed redirect only after ownership and the desired address are agreed; this keeps the installation origin and existing installed apps on the current Render address. No short domain is claimed to exist or be available.
+
+Render also supports adding a custom domain while keeping the `onrender.com` address, but installing the app from a new origin requires a separately planned identity/session/push migration. No domain, DNS, service name or application-origin setting is changed here. See [Render custom domains](https://render.com/docs/custom-domains). Browser guidance follows [Chrome Intents](https://developer.chrome.com/docs/android/intents), [PWA display-mode detection](https://web.dev/learn/pwa/detection) and [Apple's Safari instructions](https://support.apple.com/guide/iphone/open-as-web-app-iphea86e5236/ios).
+
+### Verification of the two screens
+
+`tests/installation.spec.js` covers browser routing, admin exemption, intent destination and blocked handoff, clipboard fallback, native-prompt outcomes, iOS guidance, standalone launch/session persistence and responsive screenshots. Existing citizen regressions now use the supported iOS standalone property in a test-only fixture; normal-browser gateway/admin tests use unmodified browser contexts. This is a simulation of installed execution, not physical OS installation.
+
+Screenshots: ignored `artifacts/screenshots/download-390.png` and `setup-390.png`, plus small/mobile/desktop variants. Run `npm run build`, `npm test`, `node --test --test-concurrency=1 server/test/production/*.test.js`, and `node scripts/run-browser-tests.mjs`. Tests use disposable local fixtures, not Atlas. Still verify the updated `/setup` handoff on the actual Messenger/Android phone, Chrome's real install dialog, home-screen launch, iPhone/iPad Safari and existing notification opt-in/delivery on physical devices.
 
 ## Icons and safe areas
 

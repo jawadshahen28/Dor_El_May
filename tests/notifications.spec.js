@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, emulateInstalledPwa } from './fixtures/installed-pwa.js';
 import { createECDH, randomBytes, randomUUID } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 import { isPublicStaticUrl } from '../client/src/pwa/cachePolicy.js';
@@ -50,9 +50,10 @@ test('denied permissions and unsupported iPhone browser modes explain the next s
   await expect(page.getByRole('button', { name: 'تفعيل الإشعارات', exact: true })).toBeDisabled();
   await expect(page.getByText(/غيّر الإذن من إعدادات المتصفح/)).toBeVisible(); expect(await page.evaluate(() => window.pushPermissionCalls)).toBe(0);
   const context = await browser.newContext({ baseURL: origin, serviceWorkers: 'allow', viewport: { width: 390, height: 844 } });
+  await emulateInstalledPwa(context);
   try {
     const iphone = await context.newPage(); await setup(iphone, 2, { unsupported: true, iphone: true }); await open(iphone);
-    await expect(iphone.getByText(/مشاركة ← إضافة إلى الشاشة الرئيسية/)).toBeVisible();
+    await expect(iphone.getByText(/الإشعارات غير مدعومة في هذا المتصفح/)).toBeVisible();
     await expect(iphone.getByRole('button', { name: 'تفعيل الإشعارات', exact: true })).toBeDisabled();
     expect(await iphone.evaluate(() => window.pushPermissionCalls)).toBe(0);
   } finally { await context.close(); }

@@ -23,6 +23,8 @@ export default defineConfig(({ mode }) => {
     })],
     build: { rollupOptions: { input: {
       app: fileURLToPath(new URL('./index.html', import.meta.url)),
+      download: fileURLToPath(new URL('./download.html', import.meta.url)),
+      setup: fileURLToPath(new URL('./setup.html', import.meta.url)),
       offline: fileURLToPath(new URL('./offline.html', import.meta.url)),
     } } },
     server: {

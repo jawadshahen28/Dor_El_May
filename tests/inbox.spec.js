@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, emulateInstalledPwa } from './fixtures/installed-pwa.js';
 import { randomUUID } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 import { palestineDateTime, nextCalendarDate } from '../shared/waterTime.js';
@@ -12,6 +12,7 @@ async function signIn(context, index) {
 }
 async function council(browser) {
   const context = await browser.newContext({ baseURL: origin });
+  await emulateInstalledPwa(context);
   const initial = (await (await context.request.get('/api/auth/me')).json()).data;
   const response = await context.request.post('/api/admin/login', { headers: { Origin: origin, 'X-CSRF-Token': initial.csrfToken }, data: { phone: '0594933333', password: 'CouncilBrowser9!' } });
   expect(response.status()).toBe(200);

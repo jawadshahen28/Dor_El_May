@@ -28,7 +28,7 @@ test('app, maskable and Apple touch icons are actual PNG files at their declared
 
 test('cache allowlist rejects all authenticated data, navigations, foreign origins and query-bearing URLs', () => {
   const origin = 'https://staging.example';
-  for (const path of ['/api', '/api/auth/me', '/api/auth/login', '/api/auth/logout', '/api/reports/mine', '/api/admin/dashboard', '/api/zones', '/api/water-rounds', '/api/announcements', '/home', '/account', '/admin', '/', '/index.html', '/manifest.webmanifest', '/sw.js', '/images/citizen-upload.jpg', '/assets/profile.json']) {
+  for (const path of ['/api', '/api/auth/me', '/api/auth/login', '/api/auth/logout', '/api/reports/mine', '/api/admin/dashboard', '/api/zones', '/api/water-rounds', '/api/announcements', '/home', '/account', '/admin', '/', '/index.html', '/download', '/setup', '/download.html', '/setup.html', '/manifest.webmanifest', '/sw.js', '/images/citizen-upload.jpg', '/assets/profile.json']) {
     assert.equal(isPublicStaticUrl(new URL(path, origin), origin), false, path);
   }
   assert.equal(isPublicStaticUrl(new URL('/icons/pwa-192.png?token=private', origin), origin), false);

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, emulateInstalledPwa } from './fixtures/installed-pwa.js';
 import { mkdir } from 'node:fs/promises';
 
 test.use({ timezoneId: 'America/Los_Angeles' });
@@ -87,6 +87,7 @@ test('real admin dashboard, responsive sidebar/drawer, persistent session, and s
   const storage = await context.storageState();
   expect(storage.origins.flatMap((entry) => entry.localStorage)).toEqual([]);
   const restored = await browser.newContext({ storageState: storage });
+  await emulateInstalledPwa(restored);
   const otherPage = await restored.newPage();
   await otherPage.goto('/admin/login');
   await expect(otherPage).toHaveURL(/\/admin$/);

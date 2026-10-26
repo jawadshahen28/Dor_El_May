@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, emulateInstalledPwa } from './fixtures/installed-pwa.js';
 import { mkdir } from 'node:fs/promises';
 
 test('Arabic forms, actual images, responsive layouts, and guest navigation', async ({ page }) => {
@@ -63,6 +63,7 @@ test('real registration, refresh, restored browser session, logout, and new-devi
   expect(storage.origins.every((origin) => origin.localStorage.length === 0)).toBe(true);
   expect(await page.evaluate(() => sessionStorage.length)).toBe(0);
   const restored = await browser.newContext({ storageState: storage });
+  await emulateInstalledPwa(restored);
   const restoredPage = await restored.newPage();
   await restoredPage.goto('/login');
   await expect(restoredPage).toHaveURL(/\/home$/);

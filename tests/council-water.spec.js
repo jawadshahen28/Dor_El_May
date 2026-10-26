@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, emulateInstalledPwa } from './fixtures/installed-pwa.js';
 import { randomUUID } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 
@@ -73,6 +73,7 @@ for (const size of [{ label: 'desktop', width: 1440, height: 1000 }, { label: 'm
     await page.setViewportSize(size);
     await login(page);
     const readerContext = await browser.newContext({ baseURL: origin, serviceWorkers: 'block', viewport: { width: 390, height: 844 } });
+    await emulateInstalledPwa(readerContext);
     try {
       const reader = await citizen(readerContext);
       const zones = (await (await page.request.get('/api/zones')).json()).data.zones;
